@@ -1,7 +1,7 @@
 {
   "name": "sodam-auth",
   "version": "0.0.1",
-  "description": "",
+  "description": "Integrated authenticate server for Project Sodam",
   "author": "seonggukchoi",
   "license": "MIT",
   "scripts": {
