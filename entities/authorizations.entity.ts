@@ -11,7 +11,7 @@ export class Authorizations {
   @Column()
   public user_id: number;
 
-  @Column()
+  @Column('varchar', { length: 255 })
   public token: string;
 
   @Column('timestamptz')
