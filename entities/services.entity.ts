@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-@Entity()
-export class Services {
+@Entity('services')
+export class ServicesEntity {
   @PrimaryGeneratedColumn()
   public id: number;
 
@@ -11,12 +11,12 @@ export class Services {
   @Column('varchar', { length: 128 })
   public master_token: string;
 
-  @Column('timestamptz')
+  @Column('timestamptz', { default: 'NOW()' })
   public created_at: Date;
 
-  @Column('timestamptz')
+  @Column('timestamptz', { default: 'NOW()', onUpdate: 'NOW()' })
   public updated_at: Date;
 
-  @Column('timestamptz')
-  public deleted_at: Date;
+  @Column('timestamptz', { nullable: true })
+  public deleted_at?: Date | null;
 }

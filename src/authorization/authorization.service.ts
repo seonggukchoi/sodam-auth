@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Authorizations } from '../../entities';
+import { AuthorizationsEntity } from '../../entities';
 
 @Injectable()
 export class AuthorizationService {
   constructor(
-    @InjectRepository(Authorizations) private readonly authorizations: Repository<Authorizations>,
+    @InjectRepository(AuthorizationsEntity) private readonly authorizations: Repository<AuthorizationsEntity>,
   ) { }
 
-  public getConnection(): Repository<Authorizations> {
+  public getConnection(): Repository<AuthorizationsEntity> {
     return this.authorizations;
   }
 
-  public async getAuthorizationById(id: number, select?: Array<(keyof Authorizations)>): Promise<Authorizations> {
+  public async getAuthorizationById(id: number, select?: Array<(keyof AuthorizationsEntity)>): Promise<AuthorizationsEntity> {
     if (!select) {
       select = [
         'id',
@@ -37,7 +37,7 @@ export class AuthorizationService {
     return authorization;
   }
 
-  public async getAuthorizationsByIds(ids: number | number[], select?: Array<(keyof Authorizations)>): Promise<Authorizations[]> {
+  public async getAuthorizationsByIds(ids: number | number[], select?: Array<(keyof AuthorizationsEntity)>): Promise<AuthorizationsEntity[]> {
     ids = Array.isArray(ids) ? ids : [ids];
 
     if (!select) {

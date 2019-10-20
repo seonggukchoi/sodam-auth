@@ -1,7 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import * as moment from 'moment';
 
-@Entity()
-export class Authorizations {
+@Entity('authorizations')
+export class AuthorizationsEntity {
   @PrimaryGeneratedColumn()
   public id: number;
 
@@ -15,8 +16,8 @@ export class Authorizations {
   public token: string;
 
   @Column('timestamptz')
-  public expierd_at: Date;
+  public expierd_at: Date = moment().add(1, 'day').toDate();
 
-  @Column('timestamptz')
+  @Column('timestamptz', { default: 'NOW()' })
   public created_at: Date;
 }

@@ -1,12 +1,12 @@
-import { Authorizations } from './authorizations.entity';
-import { Services } from './services.entity';
+import { AuthorizationsEntity } from './authorizations.entity';
+import { ServicesEntity } from './services.entity';
 
 export default [
-  Authorizations,
-  Services,
+  AuthorizationsEntity,
+  ServicesEntity,
 ];
 
 export {
-  Authorizations,
-  Services,
+  AuthorizationsEntity,
+  ServicesEntity,
 };
