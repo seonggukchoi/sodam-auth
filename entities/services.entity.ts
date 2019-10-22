@@ -19,4 +19,7 @@ export class ServicesEntity {
 
   @Column('timestamptz', { nullable: true })
   public deleted_at?: Date | null;
+
+  @Column('varchar', { length: 200, nullable: true })
+  public last_updated_by?: string | null;
 }

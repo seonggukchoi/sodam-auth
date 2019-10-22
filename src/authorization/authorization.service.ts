@@ -1,65 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AuthorizationsEntity } from '../../entities';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class AuthorizationService {
+  @Inject(UserService) private readonly userService: UserService;
+
   constructor(
-    @InjectRepository(AuthorizationsEntity) private readonly authorizations: Repository<AuthorizationsEntity>,
+    @InjectRepository(AuthorizationsEntity) private readonly authorizationsRepository: Repository<AuthorizationsEntity>,
   ) { }
 
-  public getConnection(): Repository<AuthorizationsEntity> {
-    return this.authorizations;
-  }
-
-  public async getAuthorizationById(id: number, select?: Array<(keyof AuthorizationsEntity)>): Promise<AuthorizationsEntity> {
-    if (!select) {
-      select = [
-        'id',
-        'service_id',
-        'user_id',
-        'token',
-        'expierd_at',
-        'created_at',
-      ];
-    }
-
-    const authorization = await this.authorizations.findOne({
-      select,
-      where: { id },
-    });
-
-    if (!authorization) {
-      throw new Error('not found authorization');
-    }
-
-    return authorization;
-  }
-
-  public async getAuthorizationsByIds(ids: number | number[], select?: Array<(keyof AuthorizationsEntity)>): Promise<AuthorizationsEntity[]> {
-    ids = Array.isArray(ids) ? ids : [ids];
-
-    if (!select) {
-      select = [
-        'id',
-        'service_id',
-        'user_id',
-        'token',
-        'expierd_at',
-        'created_at',
-      ];
-    }
-
-    const authorizations = await this.authorizations.find({
-      select,
-      where: { id: ids },
-    });
-
-    if (!authorizations) {
-      throw new Error('not found authorizations');
-    }
-
-    return authorizations;
+  public async login(email: string, password: string): Promise<boolean> {
+    return this.userService.authenticateUser(email, password);
   }
 }
