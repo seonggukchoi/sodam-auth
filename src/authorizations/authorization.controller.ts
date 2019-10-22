@@ -1,5 +1,5 @@
 import { Controller, Post, Body } from '@nestjs/common';
-import { AuthorizationService } from '../authorization/authorization.service';
+import { AuthorizationService } from './authorization.service';
 
 @Controller({
   path: '/authorizations',
