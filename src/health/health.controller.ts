@@ -1,13 +1,11 @@
 import { Controller, Get } from '@nestjs/common';
-import { AuthorizationService } from '../authorization/authorization.service';
+import { getConnection } from 'typeorm';
 
 @Controller({
   path: '/health',
 })
 export class HealthController {
-  constructor(
-    private readonly authorizationService: AuthorizationService,
-  ) { }
+  constructor() { }
 
   @Get('/')
   public getHealth(): string {
@@ -17,7 +15,9 @@ export class HealthController {
   @Get('/database')
   public async getDatabaseHealth(): Promise<string> {
     try {
-      await this.authorizationService.getConnection().query('SELECT 1 = 1');
+      const connection = getConnection();
+
+      await connection.query('SELECT 1 = 1 AS result;');
     } catch {
       throw new Error('Not Healthy');
     }
