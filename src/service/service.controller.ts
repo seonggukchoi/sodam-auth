@@ -12,14 +12,14 @@ export class ServiceController {
 
   @Get('/')
   public async getServices(): Promise<ServicesEntity[]> {
-    return this.serviceService.getServices();
+    return this.serviceService.fetchServices();
   }
 
   @Get('/:serviceId')
   public async getService(
     @Param('serviceId') serviceId: number,
   ): Promise<ServicesEntity> {
-    return this.serviceService.getService(serviceId);
+    return this.serviceService.fetchService(serviceId);
   }
 
   @Post('/')

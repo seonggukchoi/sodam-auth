@@ -9,7 +9,7 @@ export class ServiceService {
     @InjectRepository(ServicesEntity) private readonly servicesRepository: Repository<ServicesEntity>,
   ) { }
 
-  public async getServices(): Promise<ServicesEntity[]> {
+  public async fetchServices(): Promise<ServicesEntity[]> {
     const servicesEntities = await this.servicesRepository.find({
       select: ['id', 'name', 'master_token', 'created_at', 'updated_at'],
       where: { deleted_at: null },
@@ -23,7 +23,7 @@ export class ServiceService {
     return servicesEntities;
   }
 
-  public async getService(serviceId: number): Promise<ServicesEntity> {
+  public async fetchService(serviceId: number): Promise<ServicesEntity> {
     const servicesEntity = await this.servicesRepository.findOne({
       select: ['id', 'name', 'master_token', 'created_at', 'updated_at'],
       where: { id: serviceId, deleted_at: null },
