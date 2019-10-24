@@ -5,8 +5,6 @@ import { getConnection } from 'typeorm';
   path: '/health',
 })
 export class HealthController {
-  constructor() { }
-
   @Get('/')
   public getHealth(): string {
     return 'OK';

@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AuthorizationsEntity } from '../../entities';
@@ -9,7 +9,7 @@ export class AuthorizationService {
   @InjectRepository(AuthorizationsEntity) private readonly authorizationsRepository: Repository<AuthorizationsEntity>;
 
   constructor(
-    @Inject(UserService) private readonly userService: UserService,
+    private readonly userService: UserService,
   ) { }
 
   public async login(email: string, password: string): Promise<boolean> {
