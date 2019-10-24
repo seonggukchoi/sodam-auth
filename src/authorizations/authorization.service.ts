@@ -46,12 +46,17 @@ export class AuthorizationService {
     const authorizationsEntity = await this.fetchAuthorizationByToken(token);
 
     const isSameExpiredAt = moment(authorizationsEntity.expierd_at).utc().isSame(moment(tokenPayload.exp * 1000).utc());
-    const isExpired = moment(authorizationsEntity.expierd_at).utc().isBefore(moment().utc());
     const isInvalidService = tokenPayload.serviceId !== authorizationsEntity.service_id;
     const isInvalidUser = tokenPayload.userId !== authorizationsEntity.user_id;
 
-    if (!isSameExpiredAt || isExpired || isInvalidService || isInvalidUser) {
+    if (!isSameExpiredAt || isInvalidService || isInvalidUser) {
       throw new Error('Cannot validate token');
+    }
+
+    const isExpired = moment(authorizationsEntity.expierd_at).utc().isBefore(moment().utc());
+
+    if (isExpired) {
+      throw new Error('Token is expired');
     }
 
     return !!authorizationsEntity;
