@@ -6,10 +6,10 @@ import { UserService } from '../users/user.service';
 
 @Injectable()
 export class AuthorizationService {
-  @Inject(UserService) private readonly userService: UserService;
+  @InjectRepository(AuthorizationsEntity) private readonly authorizationsRepository: Repository<AuthorizationsEntity>;
 
   constructor(
-    @InjectRepository(AuthorizationsEntity) private readonly authorizationsRepository: Repository<AuthorizationsEntity>,
+    @Inject(UserService) private readonly userService: UserService,
   ) { }
 
   public async login(email: string, password: string): Promise<boolean> {

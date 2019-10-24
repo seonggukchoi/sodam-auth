@@ -5,9 +5,7 @@ import { ServicesEntity } from '../../entities';
 
 @Injectable()
 export class ServiceService {
-  constructor(
-    @InjectRepository(ServicesEntity) private readonly servicesRepository: Repository<ServicesEntity>,
-  ) { }
+  @InjectRepository(ServicesEntity) private readonly servicesRepository: Repository<ServicesEntity>;
 
   public async fetchServices(): Promise<ServicesEntity[]> {
     const servicesEntities = await this.servicesRepository.find({
