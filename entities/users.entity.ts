@@ -6,6 +6,9 @@ export class UsersEntity {
   @PrimaryGeneratedColumn()
   public id: number;
 
+  @Column('int')
+  public service_id: number;
+
   @Column('varchar', { length: 20 })
   public first_name: string;
 

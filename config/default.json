@@ -9,5 +9,12 @@
     "password": "Test2019!",
     "database": "sodam_auth",
     "synchronize": true
+  },
+  "token": {
+    "secret_key": "TEST",
+    "sign_options": {
+      "expires_in_amount": 1,
+      "expires_in_unit": "days"
+    }
   }
 }

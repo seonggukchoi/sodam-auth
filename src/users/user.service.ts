@@ -56,6 +56,7 @@ export class UserService {
   public async insertUser(userInput: UsersEntity): Promise<UsersEntity> {
     const usersEntity = this.usersRepository.create();
 
+    usersEntity.service_id = userInput.service_id;
     usersEntity.locale = userInput.locale;
     usersEntity.email = userInput.email;
     usersEntity.password = userInput.password;
@@ -90,8 +91,8 @@ export class UserService {
     return this.usersRepository.save(usersEntity);
   }
 
-  public async authenticateUser(email: string, password: string): Promise<boolean> {
-    const usersEntity = await this.fetchUserByEmail(email);
+  public async authenticateUser(serviceId: number, email: string, password: string): Promise<UsersEntity> {
+    const usersEntity = await this.fetchUserByServiceAndEmail(serviceId, email);
 
     if (password !== usersEntity.password) {
       throw new Error('Not matched password');
@@ -99,15 +100,13 @@ export class UserService {
 
     usersEntity.last_authenticated_at = new Date();
 
-    await this.usersRepository.save(usersEntity);
-
-    return true;
+    return await this.usersRepository.save(usersEntity);
   }
 
-  private async fetchUserByEmail(email: string): Promise<UsersEntity> {
+  private async fetchUserByServiceAndEmail(serviceId: number, email: string): Promise<UsersEntity> {
     const usersEntity = await this.usersRepository.findOne({
       select: ['id', 'email', 'password', 'last_authenticated_at'],
-      where: { email },
+      where: { service_id: serviceId, email },
     });
 
     if (!usersEntity) {

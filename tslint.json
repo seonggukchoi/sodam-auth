@@ -17,6 +17,19 @@
     "no-empty": false,
     "arrow-parens": false,
     "no-angle-bracket-type-assertion": false,
+    "no-shadowed-variable": [
+      false,
+      {
+        "class": true,
+        "enum": true,
+        "function": true,
+        "interface": false,
+        "namespace": true,
+        "typeAlias": false,
+        "typeParameter": false,
+        "underscore": false
+      }
+    ],
     "whitespace": [
       true, 
       "check-branch",
