@@ -1,13 +1,13 @@
 import { Controller, Get, Post, Body } from '@nestjs/common';
-import { AuthorizationService } from './authorization.service';
+import { AuthenticationService } from './authentication.service';
 import { AuthorizationsEntity } from '../../entities';
 
 @Controller({
-  path: '/authorizations',
+  path: '/authentications',
 })
-export class AuthorizationController {
+export class AuthenticationController {
   constructor(
-    private readonly authorizationService: AuthorizationService,
+    private readonly authenticationService: AuthenticationService,
   ) { }
 
   @Post('/login')
@@ -16,13 +16,13 @@ export class AuthorizationController {
     @Body('email') email: string,
     @Body('password') password: string,
   ): Promise<AuthorizationsEntity> {
-    return this.authorizationService.login(serviceId, email, password);
+    return this.authenticationService.login(serviceId, email, password);
   }
 
   @Post('/')
   public async authenticate(
     @Body('token') token: string,
   ): Promise<boolean> {
-    return this.authorizationService.checkAuthorizationByToken(token);
+    return this.authenticationService.checkPermissionByToken(token);
   }
 }

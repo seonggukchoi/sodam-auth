@@ -11,6 +11,7 @@
     "synchronize": true
   },
   "token": {
+    "master_token": "TEST",
     "secret_key": "TEST",
     "sign_options": {
       "expires_in_amount": 1,

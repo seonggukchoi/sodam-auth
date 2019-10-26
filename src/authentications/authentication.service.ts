@@ -7,21 +7,8 @@ import * as moment from 'moment';
 import { AuthorizationsEntity } from '../../entities';
 import { UserService } from '../users/user.service';
 
-interface ITokenPayload {
-  serviceId: number;
-  userId: number;
-  email: string;
-  iat?: number;
-  exp?: number;
-}
-
-interface IExpiresInComponent {
-  expiresInAmount: number;
-  expiresInUnit: string;
-}
-
 @Injectable()
-export class AuthorizationService {
+export class AuthenticationService {
   @InjectRepository(AuthorizationsEntity) private readonly authorizationsRepository: Repository<AuthorizationsEntity>;
 
   constructor(
@@ -41,7 +28,7 @@ export class AuthorizationService {
     return this.insertAuthorization(serviceId, userId, token);
   }
 
-  public async checkAuthorizationByToken(token: string): Promise<boolean> {
+  public async checkPermissionByToken(token: string): Promise<boolean> {
     const tokenPayload = <ITokenPayload>jwt.decode(token);
     const authorizationsEntity = await this.fetchAuthorizationByToken(token);
 
@@ -115,4 +102,17 @@ export class AuthorizationService {
 
     return `${ expiresInAmount } ${ expiresInUnit }`;
   }
+}
+
+interface ITokenPayload {
+  serviceId: number;
+  userId: number;
+  email: string;
+  iat?: number;
+  exp?: number;
+}
+
+interface IExpiresInComponent {
+  expiresInAmount: number;
+  expiresInUnit: string;
 }
