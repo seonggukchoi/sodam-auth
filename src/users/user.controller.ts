@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
+import { Controller, Inject, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
 import { UsersEntity } from '../../entities';
 import { UserService } from './user.service';
 
@@ -6,9 +6,7 @@ import { UserService } from './user.service';
   path: '/users',
 })
 export class UserController {
-  constructor(
-    private readonly userService: UserService,
-  ) { }
+  @Inject(UserService) private readonly userService: UserService;
 
   @Get('/')
   public async getUsers(): Promise<UsersEntity[]> {
