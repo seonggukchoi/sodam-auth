@@ -13,4 +13,4 @@ import { AuthenticationService } from './authentication.service';
   controllers: [AuthenticationController],
   providers: [AuthenticationService],
 })
-export class AuthorizationModule { }
+export class AuthenticationModule { }

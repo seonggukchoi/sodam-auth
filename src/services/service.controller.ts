@@ -1,10 +1,12 @@
-import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
+import { Controller, UseGuards, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
+import { MasterGuard } from '../shared/guards';
 import { ServiceService } from './service.service';
 import { ServicesEntity } from '../../entities';
 
 @Controller({
   path: 'services',
 })
+@UseGuards(MasterGuard)
 export class ServiceController {
   constructor(
     private readonly serviceService: ServiceService,

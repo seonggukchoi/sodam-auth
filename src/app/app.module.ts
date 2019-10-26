@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { HealthModule } from '../health';
-import { AuthorizationModule } from '../authentications';
+import { AuthenticationModule } from '../authentications';
 import { UserModule } from '../users';
 import { ServiceModule } from '../services';
 
 @Module({
   imports: [
     HealthModule,
-    AuthorizationModule,
+    AuthenticationModule,
     UserModule,
     ServiceModule,
   ],

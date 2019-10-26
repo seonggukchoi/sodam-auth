@@ -1,9 +1,9 @@
-import { AuthorizationModule } from './authentication.module';
+import { AuthenticationModule } from './authentication.module';
 import { AuthenticationController } from './authentication.controller';
 import { AuthenticationService } from './authentication.service';
 
 export {
-  AuthorizationModule,
+  AuthenticationModule,
   AuthenticationController,
   AuthenticationService,
 };
