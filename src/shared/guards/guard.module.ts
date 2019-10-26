@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { DatabaseModule } from './database.module';
-import { UserService } from './guards/user.service';
-import { AuthenticationService } from './guards/authentication.service';
-import { MasterGuard, UserGuard } from './guards';
+import { DatabaseModule } from '../database.module';
+import { UserService } from './user.service';
+import { AuthenticationService } from './authentication.service';
+import { MasterGuard, UserGuard } from '.';
 
 @Module({
   imports: [DatabaseModule],

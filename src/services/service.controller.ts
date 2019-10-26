@@ -8,7 +8,9 @@ import { ServicesEntity } from '../../entities';
 })
 @UseGuards(MasterGuard)
 export class ServiceController {
-  @Inject(ServiceService) private readonly serviceService: ServiceService;
+  constructor(
+    @Inject(ServiceService) private readonly serviceService: ServiceService,
+  ) { }
 
   @Get('/')
   public async getServices(): Promise<ServicesEntity[]> {

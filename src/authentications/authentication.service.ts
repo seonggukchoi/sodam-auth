@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as config from 'config';
@@ -9,10 +9,9 @@ import { UserService } from '../users/user.service';
 
 @Injectable()
 export class AuthenticationService {
-  @InjectRepository(AuthorizationsEntity) private readonly authorizationsRepository: Repository<AuthorizationsEntity>;
-
   constructor(
-    private readonly userService: UserService,
+    @InjectRepository(AuthorizationsEntity) private readonly authorizationsRepository: Repository<AuthorizationsEntity>,
+    @Inject(UserService) private readonly userService: UserService,
   ) { }
 
   public async login(serviceId: number, email: string, password: string): Promise<AuthorizationsEntity> {

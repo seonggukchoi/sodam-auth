@@ -1,9 +1,11 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { Injectable, Inject, CanActivate, ExecutionContext } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
 
 @Injectable()
 export class UserGuard implements CanActivate {
-  constructor(private readonly authenticationService: AuthenticationService) { }
+  constructor(
+    @Inject(AuthenticationService) private readonly authenticationService: AuthenticationService,
+  ) { }
 
   public async canActivate(context: ExecutionContext): Promise<boolean> {
     const headers = context.getArgByIndex(0).headers;

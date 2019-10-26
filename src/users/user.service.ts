@@ -5,7 +5,9 @@ import { UsersEntity } from '../../entities';
 
 @Injectable()
 export class UserService {
-  @InjectRepository(UsersEntity) private readonly usersRepository: Repository<UsersEntity>;
+  constructor(
+    @InjectRepository(UsersEntity) private readonly usersRepository: Repository<UsersEntity>,
+  ) { }
 
   public async fetchUsers(): Promise<UsersEntity[]> {
     const usersEntities = await this.usersRepository.find({
