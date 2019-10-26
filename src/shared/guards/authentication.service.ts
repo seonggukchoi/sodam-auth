@@ -4,8 +4,8 @@ import { Repository } from 'typeorm';
 import * as config from 'config';
 import * as jwt from 'jsonwebtoken';
 import * as moment from 'moment';
-import { AuthorizationsEntity } from '../../entities';
-import { UserService } from '../users/user.service';
+import { AuthorizationsEntity } from '../../../entities';
+import { UserService } from '../../users/user.service';
 
 @Injectable()
 export class AuthenticationService {
