@@ -96,8 +96,11 @@ export class UserService {
   public async authenticateUser(serviceId: number, email: string, password: string): Promise<UsersEntity> {
     const usersEntity = await this.fetchUserByServiceAndEmail(serviceId, email);
 
-    if (password !== usersEntity.password) {
-      throw new Error('Not matched password');
+    const isValidEmail = !!usersEntity;
+    const isValidPassword = password === usersEntity.password;
+
+    if (!isValidEmail || !isValidPassword) {
+      throw new Error('Not valid login information');
     }
 
     usersEntity.last_authenticated_at = new Date();

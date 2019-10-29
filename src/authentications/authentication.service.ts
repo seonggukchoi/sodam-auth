@@ -24,6 +24,8 @@ export class AuthenticationService {
     const userId = usersEntity.id;
     const token = this.signToken(serviceId, userId, email);
 
+    await this.expireAuthorizations(serviceId, userId);
+
     return this.insertAuthorization(serviceId, userId, token);
   }
 
@@ -48,7 +50,7 @@ export class AuthenticationService {
     const isValidUser = tokenPayload.userId === authorizationsEntity.user_id;
 
     if (!isValidUser) {
-      throw new Error('Cannot validate user');
+      throw new Error('Not valid user');
     }
 
     const isExpired = moment(authorizationsEntity.expierd_at).utc().isBefore(moment().utc());
@@ -72,6 +74,24 @@ export class AuthenticationService {
     }
 
     return authorizationsEntity;
+  }
+
+  public async expireAuthorizations(serviceId: number, userId: number): Promise<boolean> {
+    const authorizationsEntities = await this.authorizationsRepository.find({
+      select: ['id'],
+      where: { service_id: serviceId, user_id: userId },
+      order: { id: 'DESC' },
+    });
+
+    if (!authorizationsEntities) {
+      throw new Error('Cannot find authorizations');
+    }
+
+    const authorizationIds = authorizationsEntities.map(authorizationsEntity => authorizationsEntity.id);
+
+    await this.authorizationsRepository.update(authorizationIds, { expierd_at: new Date() });
+
+    return true;
   }
 
   public async insertAuthorization(serviceId: number, userId: number, token: string): Promise<AuthorizationsEntity> {
