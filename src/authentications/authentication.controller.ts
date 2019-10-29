@@ -1,6 +1,6 @@
 import { Controller, HttpException, HttpStatus, Post, Body } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
-import { AuthorizationsEntity } from '../../entities';
+import { AuthorizationEntity } from '../../entities';
 
 @Controller({
   path: '/authentications',
@@ -15,16 +15,16 @@ export class AuthenticationController {
     @Body('service_id') serviceId: number,
     @Body('email') email: string,
     @Body('password') password: string,
-  ): Promise<AuthorizationsEntity> {
-    let authorizationsEntity: AuthorizationsEntity | null = null;
+  ): Promise<AuthorizationEntity> {
+    let authorizationEntity: AuthorizationEntity | null = null;
 
     try {
-      authorizationsEntity = await this.authenticationService.login(serviceId, email, password);
+      authorizationEntity = await this.authenticationService.login(serviceId, email, password);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
     }
 
-    return authorizationsEntity;
+    return authorizationEntity;
   }
 
   @Post('/')

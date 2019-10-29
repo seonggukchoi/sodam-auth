@@ -4,24 +4,24 @@ import { Repository } from 'typeorm';
 import * as config from 'config';
 import * as jwt from 'jsonwebtoken';
 import * as moment from 'moment';
-import { AuthorizationsEntity } from '../../entities';
+import { AuthorizationEntity } from '../../entities';
 import { UserService } from '../users/user.service';
 
 @Injectable()
 export class AuthenticationService {
   constructor(
-    @InjectRepository(AuthorizationsEntity) private readonly authorizationsRepository: Repository<AuthorizationsEntity>,
+    @InjectRepository(AuthorizationEntity) private readonly authorizationsRepository: Repository<AuthorizationEntity>,
     @Inject(UserService) private readonly userService: UserService,
   ) { }
 
-  public async login(serviceId: number, email: string, password: string): Promise<AuthorizationsEntity> {
-    const usersEntity = await this.userService.authenticateUser(serviceId, email, password);
+  public async login(serviceId: number, email: string, password: string): Promise<AuthorizationEntity> {
+    const userEntity = await this.userService.authenticateUser(serviceId, email, password);
 
-    if (!usersEntity) {
+    if (!userEntity) {
       throw new Error('Cannot authenticate user');
     }
 
-    const userId = usersEntity.id;
+    const userId = userEntity.id;
     const token = this.signToken(serviceId, userId, email);
 
     await this.expireAuthorizations(serviceId, userId);
@@ -31,9 +31,9 @@ export class AuthenticationService {
 
   public async checkPermissionByToken(token: string): Promise<boolean> {
     const tokenPayload = <ITokenPayload>jwt.decode(token);
-    const authorizationsEntity = await this.fetchAuthorizationByToken(token);
+    const authorizationEntity = await this.fetchAuthorizationByToken(token);
 
-    const authorizationsExpiredAt = moment(authorizationsEntity.expierd_at).startOf('second').utc();
+    const authorizationsExpiredAt = moment(authorizationEntity.expierd_at).startOf('second').utc();
     const tokenExpiredAt = moment(tokenPayload.exp * 1000).utc();
     const isSameExpiredAt = authorizationsExpiredAt.isSame(tokenExpiredAt);
 
@@ -41,73 +41,73 @@ export class AuthenticationService {
       throw new Error('Not valid expired at');
     }
 
-    const isValidService = tokenPayload.serviceId === authorizationsEntity.service_id;
+    const isValidService = tokenPayload.serviceId === authorizationEntity.service_id;
 
     if (!isValidService) {
       throw new Error('Not valid service');
     }
 
-    const isValidUser = tokenPayload.userId === authorizationsEntity.user_id;
+    const isValidUser = tokenPayload.userId === authorizationEntity.user_id;
 
     if (!isValidUser) {
       throw new Error('Not valid user');
     }
 
-    const isExpired = moment(authorizationsEntity.expierd_at).utc().isBefore(moment().utc());
+    const isExpired = moment(authorizationEntity.expierd_at).utc().isBefore(moment().utc());
 
     if (isExpired) {
       throw new Error('Token is expired');
     }
 
-    return !!authorizationsEntity;
+    return !!authorizationEntity;
   }
 
-  public async fetchAuthorizationByToken(token: string): Promise<AuthorizationsEntity> {
-    const authorizationsEntity = await this.authorizationsRepository.findOne({
+  public async fetchAuthorizationByToken(token: string): Promise<AuthorizationEntity> {
+    const authorizationEntity = await this.authorizationsRepository.findOne({
       select: ['id', 'service_id', 'user_id', 'expierd_at'],
       where: { token },
       order: { id: 'DESC' },
     });
 
-    if (!authorizationsEntity) {
+    if (!authorizationEntity) {
       throw new Error('Cannot find authorization');
     }
 
-    return authorizationsEntity;
+    return authorizationEntity;
   }
 
   public async expireAuthorizations(serviceId: number, userId: number): Promise<boolean> {
-    const authorizationsEntities = await this.authorizationsRepository.find({
+    const authorizationEntities = await this.authorizationsRepository.find({
       select: ['id'],
       where: { service_id: serviceId, user_id: userId },
       order: { id: 'DESC' },
     });
 
-    if (!authorizationsEntities) {
+    if (!authorizationEntities) {
       throw new Error('Cannot find authorizations');
     }
 
-    const authorizationIds = authorizationsEntities.map(authorizationsEntity => authorizationsEntity.id);
+    const authorizationIds = authorizationEntities.map(authorizationEntity => authorizationEntity.id);
 
     await this.authorizationsRepository.update(authorizationIds, { expierd_at: new Date() });
 
     return true;
   }
 
-  public async insertAuthorization(serviceId: number, userId: number, token: string): Promise<AuthorizationsEntity> {
-    const usersEntity = this.authorizationsRepository.create();
+  public async insertAuthorization(serviceId: number, userId: number, token: string): Promise<AuthorizationEntity> {
+    const userEntity = this.authorizationsRepository.create();
 
     const expiresInComponent = this.getExpiresInComponent();
     const expiresInAmount = <moment.DurationInputArg1>expiresInComponent.expiresInAmount;
     const expiresInUnit = <moment.DurationInputArg2>expiresInComponent.expiresInUnit;
     const expiredAt = moment().utc().add(expiresInAmount, expiresInUnit).toDate();
 
-    usersEntity.service_id = serviceId;
-    usersEntity.user_id = userId;
-    usersEntity.token = token;
-    usersEntity.expierd_at = expiredAt;
+    userEntity.service_id = serviceId;
+    userEntity.user_id = userId;
+    userEntity.token = token;
+    userEntity.expierd_at = expiredAt;
 
-    return this.authorizationsRepository.save(usersEntity);
+    return this.authorizationsRepository.save(userEntity);
   }
 
   private signToken(serviceId: number, userId: number, email: string): string {

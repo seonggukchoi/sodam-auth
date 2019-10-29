@@ -1,5 +1,5 @@
 import { Controller, HttpException, HttpStatus, Inject, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
-import { UsersEntity } from '../../entities';
+import { UserEntity } from '../../entities';
 import { UserService } from './user.service';
 
 @Controller({
@@ -11,76 +11,76 @@ export class UserController {
   ) { }
 
   @Get('/')
-  public async getUsers(): Promise<UsersEntity[]> {
-    let usersEntities: UsersEntity[] | null = null;
+  public async getUsers(): Promise<UserEntity[]> {
+    let userEntities: UserEntity[] | null = null;
 
     try {
-      usersEntities = await this.userService.fetchUsers();
+      userEntities = await this.userService.fetchUsers();
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    return usersEntities;
+    return userEntities;
   }
 
   @Get('/:userId')
   public async getUser(
     @Param('userId') userId: number,
-  ): Promise<UsersEntity> {
-    let usersEntity: UsersEntity | null = null;
+  ): Promise<UserEntity> {
+    let userEntity: UserEntity | null = null;
 
     try {
-      usersEntity = await this.userService.fetchUser(userId);
+      userEntity = await this.userService.fetchUser(userId);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    return usersEntity;
+    return userEntity;
   }
 
   @Post('/')
   public async insertUser(
-    @Body() userInput: UsersEntity,
-  ): Promise<UsersEntity> {
-    let usersEntity: UsersEntity | null = null;
+    @Body() userInput: UserEntity,
+  ): Promise<UserEntity> {
+    let userEntity: UserEntity | null = null;
 
     try {
-      usersEntity = await this.userService.insertUser(userInput);
+      userEntity = await this.userService.insertUser(userInput);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    return usersEntity;
+    return userEntity;
   }
 
   @Put('/:userId')
   public async updateUser(
     @Param('userId') userId: number,
-    @Body() userInput: UsersEntity,
-  ): Promise<UsersEntity> {
-    let usersEntity: UsersEntity | null = null;
+    @Body() userInput: UserEntity,
+  ): Promise<UserEntity> {
+    let userEntity: UserEntity | null = null;
 
     try {
-      usersEntity = await this.userService.updateUser(userId, userInput);
+      userEntity = await this.userService.updateUser(userId, userInput);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    return usersEntity;
+    return userEntity;
   }
 
   @Delete('/:userId')
   public async deleteUser(
     @Param('userId') userId: number,
-  ): Promise<UsersEntity> {
-    let usersEntity: UsersEntity | null = null;
+  ): Promise<UserEntity> {
+    let userEntity: UserEntity | null = null;
 
     try {
-      usersEntity = await this.userService.deleteUser(userId);
+      userEntity = await this.userService.deleteUser(userId);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    return usersEntity;
+    return userEntity;
   }
 }

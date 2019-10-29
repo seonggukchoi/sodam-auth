@@ -1,82 +1,82 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { ServicesEntity } from '../../entities';
+import { ServiceEntity } from '../../entities';
 
 @Injectable()
 export class ServiceService {
   constructor(
-    @InjectRepository(ServicesEntity) private readonly servicesRepository: Repository<ServicesEntity>,
+    @InjectRepository(ServiceEntity) private readonly servicesRepository: Repository<ServiceEntity>,
   ) { }
 
-  public async fetchServices(): Promise<ServicesEntity[]> {
-    const servicesEntities = await this.servicesRepository.find({
+  public async fetchServices(): Promise<ServiceEntity[]> {
+    const serviceEntities = await this.servicesRepository.find({
       select: ['id', 'name', 'master_token', 'created_at', 'updated_at'],
       where: { deleted_at: null },
       order: { id: 'ASC' },
     });
 
-    if (!servicesEntities) {
+    if (!serviceEntities) {
       throw new Error('Cannot find services');
     }
 
-    return servicesEntities;
+    return serviceEntities;
   }
 
-  public async fetchService(serviceId: number): Promise<ServicesEntity> {
-    const servicesEntity = await this.servicesRepository.findOne({
+  public async fetchService(serviceId: number): Promise<ServiceEntity> {
+    const serviceEntity = await this.servicesRepository.findOne({
       select: ['id', 'name', 'master_token', 'created_at', 'updated_at'],
       where: { id: serviceId, deleted_at: null },
       order: { id: 'ASC' },
     });
 
-    if (!servicesEntity) {
+    if (!serviceEntity) {
       throw new Error('Cannot find service');
     }
 
-    return servicesEntity;
+    return serviceEntity;
   }
 
-  public async insertService(serviceInput: ServicesEntity): Promise<ServicesEntity> {
+  public async insertService(serviceInput: ServiceEntity): Promise<ServiceEntity> {
     this.servicesRepository.create(serviceInput);
 
     return this.servicesRepository.save(serviceInput);
   }
 
-  public async updateService(serviceId: number, serviceInput: ServicesEntity): Promise<ServicesEntity> {
-    const servicesEntity = await this.servicesRepository.findOne({
+  public async updateService(serviceId: number, serviceInput: ServiceEntity): Promise<ServiceEntity> {
+    const serviceEntity = await this.servicesRepository.findOne({
       select: ['id', 'name', 'master_token', 'updated_at'],
       where: { id: serviceId, deleted_at: null },
       order: { id: 'ASC' },
     });
 
-    if (!servicesEntity) {
+    if (!serviceEntity) {
       throw new Error('Cannot find service');
     }
 
-    if (serviceInput.name) { servicesEntity.name = serviceInput.name; }
-    if (serviceInput.master_token) { servicesEntity.master_token = serviceInput.master_token; }
-    servicesEntity.updated_at = new Date();
+    if (serviceInput.name) { serviceEntity.name = serviceInput.name; }
+    if (serviceInput.master_token) { serviceEntity.master_token = serviceInput.master_token; }
+    serviceEntity.updated_at = new Date();
 
-    return this.servicesRepository.save(servicesEntity);
+    return this.servicesRepository.save(serviceEntity);
   }
 
-  public async deleteService(serviceId: number): Promise<ServicesEntity> {
-    const servicesEntity = await this.servicesRepository.findOne({
+  public async deleteService(serviceId: number): Promise<ServiceEntity> {
+    const serviceEntity = await this.servicesRepository.findOne({
       select: ['id', 'updated_at', 'deleted_at'],
       where: { id: serviceId, deleted_at: null },
       order: { id: 'ASC' },
     });
 
-    if (!servicesEntity) {
+    if (!serviceEntity) {
       throw new Error('Cannot find service');
     }
 
     const currentTime = new Date();
 
-    servicesEntity.updated_at = currentTime;
-    servicesEntity.deleted_at = currentTime;
+    serviceEntity.updated_at = currentTime;
+    serviceEntity.deleted_at = currentTime;
 
-    return this.servicesRepository.save(servicesEntity);
+    return this.servicesRepository.save(serviceEntity);
   }
 }

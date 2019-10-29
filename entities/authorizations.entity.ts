@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import * as moment from 'moment';
 
 @Entity('authorizations')
-export class AuthorizationsEntity {
+export class AuthorizationEntity {
   @PrimaryGeneratedColumn()
   public id: number;
 

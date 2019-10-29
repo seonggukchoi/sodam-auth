@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UsersEntity } from '../../entities';
+import { UserEntity } from '../../entities';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(UsersEntity) private readonly usersRepository: Repository<UsersEntity>,
+    @InjectRepository(UserEntity) private readonly usersRepository: Repository<UserEntity>,
   ) { }
 
-  public async fetchUsers(): Promise<UsersEntity[]> {
-    const usersEntities = await this.usersRepository.find({
+  public async fetchUsers(): Promise<UserEntity[]> {
+    const userEntities = await this.usersRepository.find({
       select: [
         'id',
         'email',
@@ -25,15 +25,15 @@ export class UserService {
       order: { id: 'ASC' },
     });
 
-    if (!usersEntities) {
+    if (!userEntities) {
       throw new Error('Cannot find users');
     }
 
-    return usersEntities;
+    return userEntities;
   }
 
-  public async fetchUser(userId: number): Promise<UsersEntity> {
-    const usersEntity = await this.usersRepository.findOne({
+  public async fetchUser(userId: number): Promise<UserEntity> {
+    const userEntity = await this.usersRepository.findOne({
       select: [
         'id',
         'email',
@@ -48,76 +48,76 @@ export class UserService {
       order: { id: 'ASC' },
     });
 
-    if (!usersEntity) {
+    if (!userEntity) {
       throw new Error('Cannot find user');
     }
 
-    return usersEntity;
+    return userEntity;
   }
 
-  public async insertUser(userInput: UsersEntity): Promise<UsersEntity> {
-    const usersEntity = this.usersRepository.create();
+  public async insertUser(userInput: UserEntity): Promise<UserEntity> {
+    const userEntity = this.usersRepository.create();
 
-    usersEntity.service_id = userInput.service_id;
-    usersEntity.locale = userInput.locale;
-    usersEntity.email = userInput.email;
-    usersEntity.password = userInput.password;
-    usersEntity.first_name = userInput.first_name;
-    usersEntity.last_name = userInput.last_name;
+    userEntity.service_id = userInput.service_id;
+    userEntity.locale = userInput.locale;
+    userEntity.email = userInput.email;
+    userEntity.password = userInput.password;
+    userEntity.first_name = userInput.first_name;
+    userEntity.last_name = userInput.last_name;
 
-    return this.usersRepository.save(usersEntity);
+    return this.usersRepository.save(userEntity);
   }
 
-  public async updateUser(userId: number, userInput: UsersEntity): Promise<UsersEntity> {
-    const usersEntity = await this.fetchUser(userId);
+  public async updateUser(userId: number, userInput: UserEntity): Promise<UserEntity> {
+    const userEntity = await this.fetchUser(userId);
 
-    usersEntity.locale = userInput.locale;
-    usersEntity.email = userInput.email;
-    usersEntity.password = userInput.password;
-    usersEntity.first_name = userInput.first_name;
-    usersEntity.last_name = userInput.last_name;
+    userEntity.locale = userInput.locale;
+    userEntity.email = userInput.email;
+    userEntity.password = userInput.password;
+    userEntity.first_name = userInput.first_name;
+    userEntity.last_name = userInput.last_name;
 
-    usersEntity.updated_at = new Date();
+    userEntity.updated_at = new Date();
 
-    return this.usersRepository.save(usersEntity);
+    return this.usersRepository.save(userEntity);
   }
 
-  public async deleteUser(userId: number): Promise<UsersEntity> {
-    const usersEntity = await this.fetchUser(userId);
+  public async deleteUser(userId: number): Promise<UserEntity> {
+    const userEntity = await this.fetchUser(userId);
 
     const currentTime = new Date();
 
-    usersEntity.deleted_at = currentTime;
-    usersEntity.updated_at = currentTime;
+    userEntity.deleted_at = currentTime;
+    userEntity.updated_at = currentTime;
 
-    return this.usersRepository.save(usersEntity);
+    return this.usersRepository.save(userEntity);
   }
 
-  public async authenticateUser(serviceId: number, email: string, password: string): Promise<UsersEntity> {
-    const usersEntity = await this.fetchUserByServiceAndEmail(serviceId, email);
+  public async authenticateUser(serviceId: number, email: string, password: string): Promise<UserEntity> {
+    const userEntity = await this.fetchUserByServiceAndEmail(serviceId, email);
 
-    const isValidEmail = !!usersEntity;
-    const isValidPassword = password === usersEntity.password;
+    const isValidEmail = !!userEntity;
+    const isValidPassword = password === userEntity.password;
 
     if (!isValidEmail || !isValidPassword) {
       throw new Error('Not valid login information');
     }
 
-    usersEntity.last_authenticated_at = new Date();
+    userEntity.last_authenticated_at = new Date();
 
-    return await this.usersRepository.save(usersEntity);
+    return await this.usersRepository.save(userEntity);
   }
 
-  private async fetchUserByServiceAndEmail(serviceId: number, email: string): Promise<UsersEntity> {
-    const usersEntity = await this.usersRepository.findOne({
+  private async fetchUserByServiceAndEmail(serviceId: number, email: string): Promise<UserEntity> {
+    const userEntity = await this.usersRepository.findOne({
       select: ['id', 'email', 'password', 'last_authenticated_at'],
       where: { service_id: serviceId, email },
     });
 
-    if (!usersEntity) {
+    if (!userEntity) {
       throw new Error('Cannot find user by email');
     }
 
-    return usersEntity;
+    return userEntity;
   }
 }

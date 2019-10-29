@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { LocaleType } from '../types/global';
 
 @Entity('users')
-export class UsersEntity {
+export class UserEntity {
   @PrimaryGeneratedColumn()
   public id: number;
 
