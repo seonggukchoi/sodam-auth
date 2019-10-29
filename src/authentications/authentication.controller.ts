@@ -24,10 +24,6 @@ export class AuthenticationController {
       throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
     }
 
-    if (!authorizationsEntity) {
-      throw new HttpException('Not valid login information', HttpStatus.UNAUTHORIZED);
-    }
-
     return authorizationsEntity;
   }
 
@@ -41,10 +37,6 @@ export class AuthenticationController {
       isValidPermission = await this.authenticationService.checkPermissionByToken(token);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
-    }
-
-    if (!isValidPermission) {
-      throw new HttpException('Not valid token', HttpStatus.UNAUTHORIZED);
     }
 
     return isValidPermission;

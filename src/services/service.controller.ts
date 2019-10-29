@@ -1,4 +1,4 @@
-import { Controller, Inject, UseGuards, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
+import { Controller, HttpException, HttpStatus, Inject, UseGuards, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
 import { MasterGuard } from '../shared/guards';
 import { ServiceService } from './service.service';
 import { ServicesEntity } from '../../entities';
@@ -14,21 +14,45 @@ export class ServiceController {
 
   @Get('/')
   public async getServices(): Promise<ServicesEntity[]> {
-    return this.serviceService.fetchServices();
+    let servicesEntities: ServicesEntity[] | null = null;
+
+    try {
+      servicesEntities = await this.serviceService.fetchServices();
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    return servicesEntities;
   }
 
   @Get('/:serviceId')
   public async getService(
     @Param('serviceId') serviceId: number,
   ): Promise<ServicesEntity> {
-    return this.serviceService.fetchService(serviceId);
+    let servicesEntity: ServicesEntity | null = null;
+
+    try {
+      servicesEntity = await this.serviceService.fetchService(serviceId);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    return servicesEntity;
   }
 
   @Post('/')
   public async insertService(
-    @Body() body: ServicesEntity,
+    @Body() serviceInput: ServicesEntity,
   ): Promise<ServicesEntity> {
-    return this.serviceService.insertService(body);
+    let servicesEntity: ServicesEntity | null = null;
+
+    try {
+      servicesEntity = await this.serviceService.insertService(serviceInput);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    return servicesEntity;
   }
 
   @Put('/:serviceId')
@@ -36,13 +60,29 @@ export class ServiceController {
     @Param('serviceId') serviceId: number,
     @Body() serviceInput: ServicesEntity,
   ): Promise<ServicesEntity> {
-    return this.serviceService.updateService(serviceId, serviceInput);
+    let servicesEntity: ServicesEntity | null = null;
+
+    try {
+      servicesEntity = await this.serviceService.updateService(serviceId, serviceInput);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    return servicesEntity;
   }
 
   @Delete('/:serviceId')
   public async deleteService(
     @Param('serviceId') serviceId: number,
   ): Promise<ServicesEntity> {
-    return this.serviceService.deleteService(serviceId);
+    let servicesEntity: ServicesEntity | null = null;
+
+    try {
+      servicesEntity = await this.serviceService.deleteService(serviceId);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    return servicesEntity;
   }
 }

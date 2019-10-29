@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, HttpException, HttpStatus, Get } from '@nestjs/common';
 import { getConnection } from 'typeorm';
 
 @Controller({
@@ -17,7 +17,7 @@ export class HealthController {
 
       await connection.query('SELECT 1 = 1 AS result;');
     } catch {
-      throw new Error('Not Healthy');
+      throw new HttpException('Database is not healthy', HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     return 'OK';
