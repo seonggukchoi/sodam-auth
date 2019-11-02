@@ -1,6 +1,6 @@
-import { AuthorizationEntity } from './authorizations.entity';
-import { ServiceEntity } from './services.entity';
-import { UserEntity } from './users.entity';
+import { AuthorizationEntity } from './authorization.entity';
+import { ServiceEntity } from './service.entity';
+import { UserEntity } from './user.entity';
 
 export default [
   AuthorizationEntity,
