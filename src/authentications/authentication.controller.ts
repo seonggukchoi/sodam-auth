@@ -1,6 +1,7 @@
-import { Controller, HttpException, HttpStatus, Post, Req, Headers, Body } from '@nestjs/common';
+import { Controller, HttpException, HttpStatus, Post, Req, Headers, Body, Delete, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
 import { ClientHashService } from '../shared/client-hash';
+import { MasterGuard } from '../shared/guards';
 import { AuthorizationEntity } from '../../entities';
 import { AuthenticationService } from './authentication.service';
 import { UserSourceType } from '../../types/users';
@@ -55,5 +56,17 @@ export class AuthenticationController {
     }
 
     return isValidPermission;
+  }
+
+  @Delete('/truncate')
+  @UseGuards(MasterGuard)
+  public async truncateAuthorizations() {
+    try {
+      await this.authenticationService.truncateAuthorizations();
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
+    }
+
+    return true;
   }
 }

@@ -1,4 +1,5 @@
-import { Controller, HttpException, HttpStatus, Inject, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
+import { Controller, UseGuards, HttpException, HttpStatus, Inject, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
+import { MasterGuard } from '../shared/guards';
 import { UserEntity } from '../../entities';
 import { UserService } from './user.service';
 
@@ -67,6 +68,18 @@ export class UserController {
     }
 
     return userEntity;
+  }
+
+  @Delete('/truncate')
+  @UseGuards(MasterGuard)
+  public async truncateUsers() {
+    try {
+      await this.userService.truncateUsers();
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
+    }
+
+    return true;
   }
 
   @Delete('/:userId')

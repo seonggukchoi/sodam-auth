@@ -71,6 +71,18 @@ export class ServiceController {
     return serviceEntity;
   }
 
+  @Delete('/truncate')
+  @UseGuards(MasterGuard)
+  public async truncateUsers() {
+    try {
+      await this.serviceService.truncateServices();
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
+    }
+
+    return true;
+  }
+
   @Delete('/:serviceId')
   public async deleteService(
     @Param('serviceId') serviceId: number,

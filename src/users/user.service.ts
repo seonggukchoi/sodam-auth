@@ -125,4 +125,8 @@ export class UserService {
 
     return await this.usersRepository.save(userEntity);
   }
+
+  public async truncateUsers(): Promise<boolean> {
+    return this.usersRepository.query('TRUNCATE TABLE users RESTART IDENTITY CASCADE;');
+  }
 }

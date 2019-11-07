@@ -114,6 +114,10 @@ export class AuthenticationService {
     return this.authorizationsRepository.save(userEntity);
   }
 
+  public async truncateAuthorizations(): Promise<boolean> {
+    return this.authorizationsRepository.query('TRUNCATE TABLE authorizations RESTART IDENTITY CASCADE;');
+  }
+
   private signToken(serviceId: number, userId: number, email: string, clientHash: string): string {
     const secretKey = config.get<string>('secret_key');
     const expiresIn = this.getExpiresIn();
