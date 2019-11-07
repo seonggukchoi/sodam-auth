@@ -14,7 +14,7 @@ export class AuthenticationService {
     @Inject(UserService) private readonly userService: UserService,
   ) { }
 
-  public async login(serviceId: number, email: string, password: string): Promise<AuthorizationEntity> {
+  public async login(serviceId: number, email: string, password: string, clientHash: string): Promise<AuthorizationEntity> {
     const userEntity = await this.userService.authenticateUser(serviceId, email, password);
 
     if (!userEntity) {
@@ -22,16 +22,16 @@ export class AuthenticationService {
     }
 
     const userId = userEntity.id;
-    const token = this.signToken(serviceId, userId, email);
+    const token = this.signToken(serviceId, userId, email, clientHash);
 
-    await this.expireAuthorizations(serviceId, userId);
+    await this.expireAuthorizations(serviceId, userId, clientHash);
 
-    return this.insertAuthorization(serviceId, userId, token);
+    return this.insertAuthorization(serviceId, userId, token, clientHash);
   }
 
-  public async checkPermissionByToken(token: string): Promise<boolean> {
+  public async checkPermission(token: string, clientHash?: string): Promise<boolean> {
     const tokenPayload = <ITokenPayload>jwt.decode(token);
-    const authorizationEntity = await this.fetchAuthorizationByToken(token);
+    const authorizationEntity = await this.fetchAuthorization(token, clientHash);
 
     const authorizationsExpiredAt = moment(authorizationEntity.expierd_at).startOf('second').utc();
     const tokenExpiredAt = moment(tokenPayload.exp * 1000).utc();
@@ -62,10 +62,10 @@ export class AuthenticationService {
     return !!authorizationEntity;
   }
 
-  public async fetchAuthorizationByToken(token: string): Promise<AuthorizationEntity> {
+  public async fetchAuthorization(token: string, clientHash?: string): Promise<AuthorizationEntity> {
     const authorizationEntity = await this.authorizationsRepository.findOne({
-      select: ['id', 'service_id', 'user_id', 'expierd_at'],
-      where: { token },
+      select: ['id', 'service_id', 'user_id', 'client_hash', 'expierd_at'],
+      where: { token, client_hash: clientHash },
       order: { id: 'DESC' },
     });
 
@@ -76,10 +76,10 @@ export class AuthenticationService {
     return authorizationEntity;
   }
 
-  public async expireAuthorizations(serviceId: number, userId: number): Promise<boolean> {
+  public async expireAuthorizations(serviceId: number, userId: number, clientHash: string): Promise<boolean> {
     const authorizationEntities = await this.authorizationsRepository.find({
       select: ['id'],
-      where: { service_id: serviceId, user_id: userId },
+      where: { service_id: serviceId, user_id: userId, client_hash: clientHash },
       order: { id: 'DESC' },
     });
 
@@ -89,12 +89,14 @@ export class AuthenticationService {
 
     const authorizationIds = authorizationEntities.map(authorizationEntity => authorizationEntity.id);
 
-    await this.authorizationsRepository.update(authorizationIds, { expierd_at: new Date() });
+    if (authorizationIds && authorizationIds.length > 0) {
+      await this.authorizationsRepository.update(authorizationIds, { expierd_at: new Date() });
+    }
 
     return true;
   }
 
-  public async insertAuthorization(serviceId: number, userId: number, token: string): Promise<AuthorizationEntity> {
+  public async insertAuthorization(serviceId: number, userId: number, token: string, clientHash: string): Promise<AuthorizationEntity> {
     const userEntity = this.authorizationsRepository.create();
 
     const expiresInComponent = this.getExpiresInComponent();
@@ -105,16 +107,17 @@ export class AuthenticationService {
     userEntity.service_id = serviceId;
     userEntity.user_id = userId;
     userEntity.token = token;
+    userEntity.client_hash = clientHash;
     userEntity.expierd_at = expiredAt;
 
     return this.authorizationsRepository.save(userEntity);
   }
 
-  private signToken(serviceId: number, userId: number, email: string): string {
-    const secretKey = config.get<string>('token.secret_key');
+  private signToken(serviceId: number, userId: number, email: string, clientHash: string): string {
+    const secretKey = config.get<string>('secret_key');
     const expiresIn = this.getExpiresIn();
 
-    const tokenPayload = <ITokenPayload>{ serviceId, userId, email };
+    const tokenPayload = <ITokenPayload>{ serviceId, userId, email, clientHash };
     const tokenOptions = <jwt.SignOptions>{ expiresIn };
 
     return jwt.sign(tokenPayload, secretKey, tokenOptions);

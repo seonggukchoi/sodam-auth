@@ -12,8 +12,11 @@ export class AuthorizationEntity {
   @Column('int')
   public user_id: number;
 
-  @Column('varchar', { length: 255 })
+  @Column('varchar', { length: 512 })
   public token: string;
+
+  @Column('varchar', { length: 128, nullable: true })
+  public client_hash?: string;
 
   @Column('timestamptz')
   public expierd_at: Date;
