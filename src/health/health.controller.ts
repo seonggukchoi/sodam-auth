@@ -7,7 +7,7 @@ import { getConnection } from 'typeorm';
 export class HealthController {
   @Get('/')
   public getHealth(): string {
-    return 'OK';
+    return 'API OK';
   }
 
   @Get('/database')
@@ -20,6 +20,6 @@ export class HealthController {
       throw new HttpException('Database is not healthy', HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    return 'OK';
+    return 'Database OK';
   }
 }
