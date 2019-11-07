@@ -1,8 +1,11 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-import { LocaleType } from '../types/global';
+import { LocaleType, localeTypes } from '../types/global';
+import { UserSourceType, userSourceTypes } from '../types/users';
+
 
 @Entity('users')
 export class UserEntity {
+
   @PrimaryGeneratedColumn()
   public id: number;
 
@@ -15,8 +18,11 @@ export class UserEntity {
   @Column('varchar', { length: 20 })
   public last_name: string;
 
-  @Column('enum', { enum: <LocaleType[]>['ko-KR', 'en-US', 'ja-JP'] })
+  @Column('enum', { enum: localeTypes })
   public locale: LocaleType;
+
+  @Column('enum', { enum: userSourceTypes, default: 'direct' })
+  public source: UserSourceType;
 
   @Column('varchar', { length: 256 })
   public email: string;

@@ -5,6 +5,7 @@ import * as config from 'config';
 import * as jwt from 'jsonwebtoken';
 import * as moment from 'moment';
 import { AuthorizationEntity } from '../../entities';
+import { UserSourceType } from '../../types/users';
 import { UserService } from '../users/user.service';
 
 @Injectable()
@@ -14,8 +15,8 @@ export class AuthenticationService {
     @Inject(UserService) private readonly userService: UserService,
   ) { }
 
-  public async login(serviceId: number, email: string, password: string, clientHash: string): Promise<AuthorizationEntity> {
-    const userEntity = await this.userService.authenticateUser(serviceId, email, password);
+  public async login(serviceId: number, email: string, password: string, source: UserSourceType, clientHash: string): Promise<AuthorizationEntity> {
+    const userEntity = await this.userService.authenticateUser(serviceId, email, password, source);
 
     if (!userEntity) {
       throw new Error('Cannot authenticate user');

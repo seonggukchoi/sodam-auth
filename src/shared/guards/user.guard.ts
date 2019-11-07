@@ -16,7 +16,7 @@ export class UserGuard implements CanActivate {
       return false;
     }
 
-    const isValidToken = await this.authenticationService.checkPermissionByToken(token);
+    const isValidToken = await this.authenticationService.checkPermission(token);
 
     return isValidToken;
   }

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from '../../entities';
+import { UserSourceType } from '../../types/users';
 
 @Injectable()
 export class UserService {
@@ -60,6 +61,7 @@ export class UserService {
 
     userEntity.service_id = userInput.service_id;
     userEntity.locale = userInput.locale;
+    userEntity.source = userInput.source;
     userEntity.email = userInput.email;
     userEntity.password = userInput.password;
     userEntity.first_name = userInput.first_name;
@@ -69,6 +71,15 @@ export class UserService {
   }
 
   public async updateUser(userId: number, userInput: UserEntity): Promise<UserEntity> {
+    const existUserEntity = await this.usersRepository.findOne({
+      select: ['id', 'email', 'password', 'last_authenticated_at'],
+      where: { email: userInput.email, source: userInput.source },
+    });
+
+    if (existUserEntity) {
+      throw new Error('Email exists already');
+    }
+
     const userEntity = await this.fetchUser(userId);
 
     userEntity.locale = userInput.locale;
@@ -93,8 +104,15 @@ export class UserService {
     return this.usersRepository.save(userEntity);
   }
 
-  public async authenticateUser(serviceId: number, email: string, password: string): Promise<UserEntity> {
-    const userEntity = await this.fetchUserByServiceAndEmail(serviceId, email);
+  public async authenticateUser(serviceId: number, email: string, password: string, source: UserSourceType): Promise<UserEntity> {
+    const userEntity = await this.usersRepository.findOne({
+      select: ['id', 'email', 'password', 'last_authenticated_at'],
+      where: { service_id: serviceId, email, source },
+    });
+
+    if (!userEntity) {
+      throw new Error('Cannot find user by email');
+    }
 
     const isValidEmail = !!userEntity;
     const isValidPassword = password === userEntity.password;
@@ -106,18 +124,5 @@ export class UserService {
     userEntity.last_authenticated_at = new Date();
 
     return await this.usersRepository.save(userEntity);
-  }
-
-  private async fetchUserByServiceAndEmail(serviceId: number, email: string): Promise<UserEntity> {
-    const userEntity = await this.usersRepository.findOne({
-      select: ['id', 'email', 'password', 'last_authenticated_at'],
-      where: { service_id: serviceId, email },
-    });
-
-    if (!userEntity) {
-      throw new Error('Cannot find user by email');
-    }
-
-    return userEntity;
   }
 }
