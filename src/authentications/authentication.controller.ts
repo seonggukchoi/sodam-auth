@@ -30,6 +30,7 @@ export class AuthenticationController {
     let authorizationEntity: AuthorizationEntity | null = null;
 
     try {
+      // TODO Add validator
       authorizationEntity = await this.authenticationService.login(serviceId, email, password, source, clientHash);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);

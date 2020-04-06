@@ -36,22 +36,14 @@ export class AuthenticationService {
 
     const authorizationsExpiredAt = moment(authorizationEntity.expiredAt).startOf('second').utc();
     const tokenExpiredAt = moment(tokenPayload.exp * 1000).utc();
+
     const isSameExpiredAt = authorizationsExpiredAt.isSame(tokenExpiredAt);
-
-    if (!isSameExpiredAt) {
-      throw new Error('Invalid expiredAt.');
-    }
-
     const isValidService = tokenPayload.serviceId === authorizationEntity.serviceId;
-
-    if (!isValidService) {
-      throw new Error('Invalid service.');
-    }
-
     const isValidUser = tokenPayload.userId === authorizationEntity.userId;
+    const isValidToken = isSameExpiredAt && isValidService && isValidUser;
 
-    if (!isValidUser) {
-      throw new Error('Invalid user.');
+    if (!isValidToken) {
+      throw new Error('Invalid token.');
     }
 
     const isExpired = moment(authorizationEntity.expiredAt).utc().isBefore(moment().utc());
