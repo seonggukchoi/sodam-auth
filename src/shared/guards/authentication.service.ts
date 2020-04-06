@@ -125,15 +125,15 @@ export class AuthenticationService {
   }
 
   private getExpiresInComponent(): IExpiresInComponent {
-    const expiresInAmount = config.get<number>('token.sign_options.expires_in_amount');
-    const expiresInUnit = config.get<string>('token.sign_options.expires_in_unit');
+    const expiresInAmount = config.get<number>('authentication.sign_options.expires_in_amount');
+    const expiresInUnit = config.get<string>('authentication.sign_options.expires_in_unit');
 
     return { expiresInAmount, expiresInUnit };
   }
 
   private getExpiresIn(): string {
-    const expiresInAmount = config.get<number>('token.sign_options.expires_in_amount');
-    const expiresInUnit = config.get<string>('token.sign_options.expires_in_unit');
+    const expiresInAmount = config.get<number>('authentication.sign_options.expires_in_amount');
+    const expiresInUnit = config.get<string>('authentication.sign_options.expires_in_unit');
 
     return `${ expiresInAmount } ${ expiresInUnit }`;
   }

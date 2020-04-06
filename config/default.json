@@ -2,16 +2,16 @@
   "host": "localhost",
   "port": 10000,
   "database": {
-    "type": "postgres",
+    "type": "mysql",
     "host": "localhost",
-    "port": 5432,
-    "username": "test",
-    "password": "Test2019!",
+    "port": 3306,
+    "username": "sodam_auth",
+    "password": "SodamAuth2020!",
     "database": "sodam_auth",
     "synchronize": true
   },
-  "secret_key": "TEST",
-  "token": {
+  "authentication": {
+    "secret_key": "TEST",
     "master_token": "TEST",
     "sign_options": {
       "expires_in_amount": 1,

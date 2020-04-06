@@ -12,7 +12,7 @@ export class MasterGuard implements CanActivate {
       return false;
     }
 
-    const masterToken = config.get<string>('token.master_token');
+    const masterToken = config.get<string>('authentication.master_token');
 
     if (headerMasterToken !== masterToken) {
       return false;
