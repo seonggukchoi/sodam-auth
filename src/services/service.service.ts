@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { isString } from 'util';
 import { ServiceEntity } from '../../entities';
 
 @Injectable()
@@ -17,7 +18,7 @@ export class ServiceService {
     });
 
     if (!serviceEntities) {
-      throw new Error('Cannot find services');
+      throw new Error('Not found services.');
     }
 
     return serviceEntities;
@@ -31,32 +32,31 @@ export class ServiceService {
     });
 
     if (!serviceEntity) {
-      throw new Error('Cannot find service');
+      throw new Error('Not found service.');
     }
 
     return serviceEntity;
   }
 
-  public async insertService(serviceInput: ServiceEntity): Promise<ServiceEntity> {
+  public async insertService(serviceInput: Pick<ServiceEntity, 'name' | 'masterToken'>): Promise<ServiceEntity> {
     this.servicesRepository.create(serviceInput);
 
     return this.servicesRepository.save(serviceInput);
   }
 
-  public async updateService(serviceId: number, serviceInput: ServiceEntity): Promise<ServiceEntity> {
+  public async updateService(serviceId: number, serviceInput: Pick<ServiceEntity, 'name' | 'masterToken'>): Promise<ServiceEntity> {
     const serviceEntity = await this.servicesRepository.findOne({
-      select: ['id', 'name', 'masterToken', 'updatedAt'],
+      select: ['id', 'name', 'masterToken'],
       where: { id: serviceId, deletedAt: null },
       order: { id: 'ASC' },
     });
 
     if (!serviceEntity) {
-      throw new Error('Cannot find service');
+      throw new Error('Not found service.');
     }
 
-    if (serviceInput.name) { serviceEntity.name = serviceInput.name; }
-    if (serviceInput.masterToken) { serviceEntity.masterToken = serviceInput.masterToken; }
-    serviceEntity.updatedAt = new Date();
+    if (isString(serviceInput.name)) { serviceEntity.name = serviceInput.name; }
+    if (isString(serviceInput.masterToken)) { serviceEntity.masterToken = serviceInput.masterToken; }
 
     return this.servicesRepository.save(serviceEntity);
   }
@@ -69,18 +69,17 @@ export class ServiceService {
     });
 
     if (!serviceEntity) {
-      throw new Error('Cannot find service');
+      throw new Error('Not found service.');
     }
 
-    const currentTime = new Date();
-
-    serviceEntity.updatedAt = currentTime;
-    serviceEntity.deletedAt = currentTime;
+    serviceEntity.deletedAt = new Date();
 
     return this.servicesRepository.save(serviceEntity);
   }
 
   public async truncateServices(): Promise<boolean> {
-    return this.servicesRepository.query('TRUNCATE TABLE services;');
+    await this.servicesRepository.query('TRUNCATE TABLE services;');
+
+    return true;
   }
 }
