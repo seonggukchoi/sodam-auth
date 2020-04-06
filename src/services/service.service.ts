@@ -39,9 +39,12 @@ export class ServiceService {
   }
 
   public async insertService(serviceInput: Pick<ServiceEntity, 'name' | 'masterToken'>): Promise<ServiceEntity> {
-    this.servicesRepository.create(serviceInput);
+    const serviceEntity = this.servicesRepository.create();
 
-    return this.servicesRepository.save(serviceInput);
+    serviceEntity.name = serviceInput.name;
+    serviceEntity.masterToken = serviceInput.masterToken;
+
+    return this.servicesRepository.save(serviceEntity);
   }
 
   public async updateService(serviceId: number, serviceInput: Pick<ServiceEntity, 'name' | 'masterToken'>): Promise<ServiceEntity> {
