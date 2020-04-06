@@ -11,8 +11,8 @@ export class ServiceService {
 
   public async fetchServices(): Promise<ServiceEntity[]> {
     const serviceEntities = await this.servicesRepository.find({
-      select: ['id', 'name', 'master_token', 'created_at', 'updated_at'],
-      where: { deleted_at: null },
+      select: ['id', 'name', 'masterToken', 'createdAt', 'updatedAt'],
+      where: { deletedAt: null },
       order: { id: 'ASC' },
     });
 
@@ -25,8 +25,8 @@ export class ServiceService {
 
   public async fetchService(serviceId: number): Promise<ServiceEntity> {
     const serviceEntity = await this.servicesRepository.findOne({
-      select: ['id', 'name', 'master_token', 'created_at', 'updated_at'],
-      where: { id: serviceId, deleted_at: null },
+      select: ['id', 'name', 'masterToken', 'createdAt', 'updatedAt'],
+      where: { id: serviceId, deletedAt: null },
       order: { id: 'ASC' },
     });
 
@@ -45,8 +45,8 @@ export class ServiceService {
 
   public async updateService(serviceId: number, serviceInput: ServiceEntity): Promise<ServiceEntity> {
     const serviceEntity = await this.servicesRepository.findOne({
-      select: ['id', 'name', 'master_token', 'updated_at'],
-      where: { id: serviceId, deleted_at: null },
+      select: ['id', 'name', 'masterToken', 'updatedAt'],
+      where: { id: serviceId, deletedAt: null },
       order: { id: 'ASC' },
     });
 
@@ -55,16 +55,16 @@ export class ServiceService {
     }
 
     if (serviceInput.name) { serviceEntity.name = serviceInput.name; }
-    if (serviceInput.master_token) { serviceEntity.master_token = serviceInput.master_token; }
-    serviceEntity.updated_at = new Date();
+    if (serviceInput.masterToken) { serviceEntity.masterToken = serviceInput.masterToken; }
+    serviceEntity.updatedAt = new Date();
 
     return this.servicesRepository.save(serviceEntity);
   }
 
   public async deleteService(serviceId: number): Promise<ServiceEntity> {
     const serviceEntity = await this.servicesRepository.findOne({
-      select: ['id', 'updated_at', 'deleted_at'],
-      where: { id: serviceId, deleted_at: null },
+      select: ['id', 'updatedAt', 'deletedAt'],
+      where: { id: serviceId, deletedAt: null },
       order: { id: 'ASC' },
     });
 
@@ -74,8 +74,8 @@ export class ServiceService {
 
     const currentTime = new Date();
 
-    serviceEntity.updated_at = currentTime;
-    serviceEntity.deleted_at = currentTime;
+    serviceEntity.updatedAt = currentTime;
+    serviceEntity.deletedAt = currentTime;
 
     return this.servicesRepository.save(serviceEntity);
   }

@@ -1,26 +1,25 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-import * as moment from 'moment';
 
 @Entity('authorizations')
 export class AuthorizationEntity {
   @PrimaryGeneratedColumn()
   public id: number;
 
-  @Column('int')
-  public service_id: number;
+  @Column('int', { name: 'service_id' })
+  public serviceId: number;
 
-  @Column('int')
-  public user_id: number;
+  @Column('int', { name: 'user_id' })
+  public userId: number;
 
   @Column('varchar', { length: 512 })
   public token: string;
 
-  @Column('varchar', { length: 128, nullable: true })
-  public client_hash?: string;
+  @Column('varchar', { name: 'client_hash', length: 128, nullable: true })
+  public clientHash?: string;
 
-  @Column('timestamp')
-  public expierd_at: Date;
+  @Column('timestamp', { name: 'expired_at' })
+  public expierdAt: Date;
 
-  @Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
-  public created_at: Date;
+  @Column('timestamp', { name: 'created_at', default: () => 'CURRENT_TIMESTAMP' })
+  public createdAt: Date;
 }

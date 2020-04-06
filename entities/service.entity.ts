@@ -8,18 +8,18 @@ export class ServiceEntity {
   @Column('varchar', { length: 50 })
   public name: string;
 
-  @Column('varchar', { length: 128 })
-  public master_token: string;
+  @Column('varchar', { name: 'master_token', length: 128 })
+  public masterToken: string;
 
-  @Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
-  public created_at: Date;
+  @Column('timestamp', { name: 'created_at', default: () => 'CURRENT_TIMESTAMP' })
+  public createdAt: Date;
 
-  @Column('timestamp', { default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
-  public updated_at: Date;
+  @Column('timestamp', { name: 'updated_at', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+  public updatedAt: Date;
 
-  @Column('timestamp', { nullable: true })
-  public deleted_at?: Date | null;
+  @Column('timestamp', { name: 'deleted_at', nullable: true })
+  public deletedAt?: Date | null;
 
-  @Column('varchar', { length: 200, nullable: true })
-  public last_updated_by?: string | null;
+  @Column('varchar', { name: 'last_updated_by', length: 200, nullable: true })
+  public lastUpdatedBy?: string | null;
 }

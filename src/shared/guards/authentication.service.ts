@@ -34,7 +34,7 @@ export class AuthenticationService {
     const tokenPayload = <ITokenPayload>jwt.decode(token);
     const authorizationEntity = await this.fetchAuthorization(token, clientHash);
 
-    const authorizationsExpiredAt = moment(authorizationEntity.expierd_at).startOf('second').utc();
+    const authorizationsExpiredAt = moment(authorizationEntity.expierdAt).startOf('second').utc();
     const tokenExpiredAt = moment(tokenPayload.exp * 1000).utc();
     const isSameExpiredAt = authorizationsExpiredAt.isSame(tokenExpiredAt);
 
@@ -42,19 +42,19 @@ export class AuthenticationService {
       throw new Error('Not valid expired at');
     }
 
-    const isValidService = tokenPayload.serviceId === authorizationEntity.service_id;
+    const isValidService = tokenPayload.serviceId === authorizationEntity.serviceId;
 
     if (!isValidService) {
       throw new Error('Not valid service');
     }
 
-    const isValidUser = tokenPayload.userId === authorizationEntity.user_id;
+    const isValidUser = tokenPayload.userId === authorizationEntity.userId;
 
     if (!isValidUser) {
       throw new Error('Not valid user');
     }
 
-    const isExpired = moment(authorizationEntity.expierd_at).utc().isBefore(moment().utc());
+    const isExpired = moment(authorizationEntity.expierdAt).utc().isBefore(moment().utc());
 
     if (isExpired) {
       throw new Error('Token is expired');
@@ -65,8 +65,8 @@ export class AuthenticationService {
 
   public async fetchAuthorization(token: string, clientHash?: string): Promise<AuthorizationEntity> {
     const authorizationEntity = await this.authorizationsRepository.findOne({
-      select: ['id', 'service_id', 'user_id', 'client_hash', 'expierd_at'],
-      where: { token, client_hash: clientHash },
+      select: ['id', 'serviceId', 'userId', 'clientHash', 'expierdAt'],
+      where: { token, clientHash },
       order: { id: 'DESC' },
     });
 
@@ -80,7 +80,7 @@ export class AuthenticationService {
   public async expireAuthorizations(serviceId: number, userId: number, clientHash: string): Promise<boolean> {
     const authorizationEntities = await this.authorizationsRepository.find({
       select: ['id'],
-      where: { service_id: serviceId, user_id: userId, client_hash: clientHash },
+      where: { serviceId, userId, clientHash },
       order: { id: 'DESC' },
     });
 
@@ -91,7 +91,7 @@ export class AuthenticationService {
     const authorizationIds = authorizationEntities.map(authorizationEntity => authorizationEntity.id);
 
     if (authorizationIds && authorizationIds.length > 0) {
-      await this.authorizationsRepository.update(authorizationIds, { expierd_at: new Date() });
+      await this.authorizationsRepository.update(authorizationIds, { expierdAt: new Date() });
     }
 
     return true;
@@ -105,11 +105,11 @@ export class AuthenticationService {
     const expiresInUnit = <moment.DurationInputArg2>expiresInComponent.expiresInUnit;
     const expiredAt = moment().utc().add(expiresInAmount, expiresInUnit).toDate();
 
-    userEntity.service_id = serviceId;
-    userEntity.user_id = userId;
+    userEntity.serviceId = serviceId;
+    userEntity.userId = userId;
     userEntity.token = token;
-    userEntity.client_hash = clientHash;
-    userEntity.expierd_at = expiredAt;
+    userEntity.clientHash = clientHash;
+    userEntity.expierdAt = expiredAt;
 
     return this.authorizationsRepository.save(userEntity);
   }

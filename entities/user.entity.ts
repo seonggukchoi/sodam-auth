@@ -1,7 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-import { LocaleType, localeTypes } from '../types/global';
-import { UserSourceType, userSourceTypes } from '../types/users';
-
+import { UserSourceType, UserSources } from '../types/users';
 
 @Entity('users')
 export class UserEntity {
@@ -9,19 +7,13 @@ export class UserEntity {
   @PrimaryGeneratedColumn()
   public id: number;
 
-  @Column('int')
-  public service_id: number;
+  @Column('int', { name: 'service_id' })
+  public serviceId: number;
 
   @Column('varchar', { length: 20 })
-  public first_name: string;
+  public name: string;
 
-  @Column('varchar', { length: 20 })
-  public last_name: string;
-
-  @Column('enum', { enum: localeTypes })
-  public locale: LocaleType;
-
-  @Column('enum', { enum: userSourceTypes, default: 'direct' })
+  @Column('enum', { enum: UserSources, default: 'direct' })
   public source: UserSourceType;
 
   @Column('varchar', { length: 256 })
@@ -30,18 +22,18 @@ export class UserEntity {
   @Column('varchar', { length: 256 })
   public password: string;
 
-  @Column('timestamp', { nullable: true })
-  public last_authenticated_at?: Date | null;
+  @Column('timestamp', { name: 'last_authenticated_at', nullable: true })
+  public lastAuthenticatedAt?: Date | null;
 
-  @Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
-  public created_at: Date;
+  @Column('timestamp', { name: 'created_at', default: () => 'CURRENT_TIMESTAMP' })
+  public createdAt: Date;
 
-  @Column('timestamp', { default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
-  public updated_at: Date;
+  @Column('timestamp', { name: 'updated_at', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+  public updatedAt: Date;
 
-  @Column('timestamp', { nullable: true })
-  public deleted_at?: Date | null;
+  @Column('timestamp', { name: 'deleted_at', nullable: true })
+  public deletedAt?: Date | null;
 
-  @Column('varchar', { length: 200, nullable: true })
-  public last_updated_by?: string | null;
+  @Column('varchar', { name: 'last_updated_by', length: 200, nullable: true })
+  public lastUpdatedBy?: string | null;
 }

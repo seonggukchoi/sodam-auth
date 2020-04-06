@@ -15,14 +15,13 @@ export class UserService {
       select: [
         'id',
         'email',
-        'first_name',
-        'last_name',
-        'last_authenticated_at',
-        'created_at',
-        'updated_at',
-        'last_updated_by',
+        'name',
+        'lastAuthenticatedAt',
+        'createdAt',
+        'updatedAt',
+        'lastUpdatedBy',
       ],
-      where: { deleted_at: null },
+      where: { deletedAt: null },
       order: { id: 'ASC' },
     });
 
@@ -38,14 +37,13 @@ export class UserService {
       select: [
         'id',
         'email',
-        'first_name',
-        'last_name',
-        'last_authenticated_at',
-        'created_at',
-        'updated_at',
-        'last_updated_by',
+        'name',
+        'lastAuthenticatedAt',
+        'createdAt',
+        'updatedAt',
+        'lastUpdatedBy',
       ],
-      where: { id: userId, deleted_at: null },
+      where: { id: userId, deletedAt: null },
       order: { id: 'ASC' },
     });
 
@@ -59,20 +57,18 @@ export class UserService {
   public async insertUser(userInput: UserEntity): Promise<UserEntity> {
     const userEntity = this.usersRepository.create();
 
-    userEntity.service_id = userInput.service_id;
-    userEntity.locale = userInput.locale;
+    userEntity.serviceId = userInput.serviceId;
     userEntity.source = userInput.source;
     userEntity.email = userInput.email;
     userEntity.password = userInput.password;
-    userEntity.first_name = userInput.first_name;
-    userEntity.last_name = userInput.last_name;
+    userEntity.name = userInput.name;
 
     return this.usersRepository.save(userEntity);
   }
 
   public async updateUser(userId: number, userInput: UserEntity): Promise<UserEntity> {
     const existUserEntity = await this.usersRepository.findOne({
-      select: ['id', 'email', 'password', 'last_authenticated_at'],
+      select: ['id', 'email', 'password', 'lastAuthenticatedAt'],
       where: { email: userInput.email, source: userInput.source },
     });
 
@@ -82,13 +78,11 @@ export class UserService {
 
     const userEntity = await this.fetchUser(userId);
 
-    userEntity.locale = userInput.locale;
     userEntity.email = userInput.email;
     userEntity.password = userInput.password;
-    userEntity.first_name = userInput.first_name;
-    userEntity.last_name = userInput.last_name;
+    userEntity.name = userInput.name;
 
-    userEntity.updated_at = new Date();
+    userEntity.updatedAt = new Date();
 
     return this.usersRepository.save(userEntity);
   }
@@ -98,16 +92,16 @@ export class UserService {
 
     const currentTime = new Date();
 
-    userEntity.deleted_at = currentTime;
-    userEntity.updated_at = currentTime;
+    userEntity.deletedAt = currentTime;
+    userEntity.updatedAt = currentTime;
 
     return this.usersRepository.save(userEntity);
   }
 
   public async authenticateUser(serviceId: number, email: string, password: string, source: UserSourceType): Promise<UserEntity> {
     const userEntity = await this.usersRepository.findOne({
-      select: ['id', 'email', 'password', 'last_authenticated_at'],
-      where: { service_id: serviceId, email, source },
+      select: ['id', 'email', 'password', 'lastAuthenticatedAt'],
+      where: { serviceId, email, source },
     });
 
     if (!userEntity) {
@@ -121,7 +115,7 @@ export class UserService {
       throw new Error('Not valid login information');
     }
 
-    userEntity.last_authenticated_at = new Date();
+    userEntity.lastAuthenticatedAt = new Date();
 
     return await this.usersRepository.save(userEntity);
   }
