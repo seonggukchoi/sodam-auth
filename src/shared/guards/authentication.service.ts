@@ -115,7 +115,7 @@ export class AuthenticationService {
   }
 
   private signToken(serviceId: number, userId: number, email: string, clientHash: string): string {
-    const secretKey = config.get<string>('secret_key');
+    const secretKey = config.get<string>('authentication.secret_key');
     const expiresIn = this.getExpiresIn();
 
     const tokenPayload = <ITokenPayload>{ serviceId, userId, email, clientHash };

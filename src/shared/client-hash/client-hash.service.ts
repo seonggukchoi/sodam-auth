@@ -5,7 +5,7 @@ import * as config from 'config';
 @Injectable()
 export class ClientHashService {
   public getClientHash(ip: string, userAgent: string): string {
-    const secretKey = config.get<string>('secret_key');
+    const secretKey = config.get<string>('authentication.secret_key');
 
     const clientHashDataOrigin = `${ ip }-${ userAgent }-${ secretKey }`;
     const clientHashData = this.modifyClientHashData(clientHashDataOrigin);
