@@ -11,13 +11,13 @@ export class ServiceEntity {
   @Column('varchar', { length: 128 })
   public master_token: string;
 
-  @Column('timestamptz', { default: 'NOW()' })
+  @Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
   public created_at: Date;
 
-  @Column('timestamptz', { default: 'NOW()', onUpdate: 'NOW()' })
+  @Column('timestamp', { default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
   public updated_at: Date;
 
-  @Column('timestamptz', { nullable: true })
+  @Column('timestamp', { nullable: true })
   public deleted_at?: Date | null;
 
   @Column('varchar', { length: 200, nullable: true })

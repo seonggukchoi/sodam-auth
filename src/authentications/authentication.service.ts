@@ -115,7 +115,7 @@ export class AuthenticationService {
   }
 
   public async truncateAuthorizations(): Promise<boolean> {
-    return this.authorizationsRepository.query('TRUNCATE TABLE authorizations RESTART IDENTITY CASCADE;');
+    return this.authorizationsRepository.query('TRUNCATE TABLE authorizations;');
   }
 
   private signToken(serviceId: number, userId: number, email: string, clientHash: string): string {

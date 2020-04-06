@@ -81,6 +81,6 @@ export class ServiceService {
   }
 
   public async truncateServices(): Promise<boolean> {
-    return this.servicesRepository.query('TRUNCATE TABLE services RESTART IDENTITY CASCADE;');
+    return this.servicesRepository.query('TRUNCATE TABLE services;');
   }
 }

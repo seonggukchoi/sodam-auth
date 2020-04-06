@@ -18,9 +18,9 @@ export class AuthorizationEntity {
   @Column('varchar', { length: 128, nullable: true })
   public client_hash?: string;
 
-  @Column('timestamptz')
+  @Column('timestamp')
   public expierd_at: Date;
 
-  @Column('timestamptz', { default: 'NOW()' })
+  @Column('timestamp', { default: () => 'CURRENT_TIMESTAMP' })
   public created_at: Date;
 }
