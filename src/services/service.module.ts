@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
-import { DatabaseModule, GuardModule } from '../shared';
+import { DatabaseModule } from '../shared/database.module';
+import { GuardModule } from '../shared/guards/guard.module';
 import { ServiceController } from './service.controller';
 import { ServiceService } from './service.service';
 
@@ -8,7 +9,7 @@ import { ServiceService } from './service.service';
     DatabaseModule,
     GuardModule,
   ],
-  exports: [],
+  exports: [ServiceService],
   controllers: [ServiceController],
   providers: [ServiceService],
 })

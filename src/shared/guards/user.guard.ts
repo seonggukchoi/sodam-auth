@@ -1,5 +1,5 @@
-import { Injectable, Inject, CanActivate, ExecutionContext } from '@nestjs/common';
-import { AuthenticationService } from './authentication.service';
+import { Injectable, Inject, CanActivate, ExecutionContext, HttpException, HttpStatus } from '@nestjs/common';
+import { AuthenticationService } from '../../authentications/authentication.service';
 
 @Injectable()
 export class UserGuard implements CanActivate {
@@ -9,14 +9,19 @@ export class UserGuard implements CanActivate {
 
   public async canActivate(context: ExecutionContext): Promise<boolean> {
     const headers = context.getArgByIndex(0).headers;
-
     const token = headers.token;
 
     if (!token) {
       return false;
     }
 
-    const isValidToken = await this.authenticationService.checkPermission(token);
+    let isValidToken: boolean = false;
+
+    try {
+      isValidToken = await this.authenticationService.checkPermission(token);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.FORBIDDEN);
+    }
 
     return isValidToken;
   }

@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, ObjectLiteral } from 'typeorm';
 import * as config from 'config';
 import * as jwt from 'jsonwebtoken';
 import * as moment from 'moment';
@@ -37,7 +37,7 @@ export class AuthenticationService {
     const authorizationsExpiredAt = moment(authorizationEntity.expiredAt).startOf('second').utc();
     const tokenExpiredAt = moment(tokenPayload.exp * 1000).utc();
 
-    const isSameExpiredAt = authorizationsExpiredAt.isSame(tokenExpiredAt);
+    const isSameExpiredAt = authorizationsExpiredAt.diff(tokenExpiredAt, 'second') < 3;
     const isValidService = tokenPayload.serviceId === authorizationEntity.serviceId;
     const isValidUser = tokenPayload.userId === authorizationEntity.userId;
     const isValidToken = isSameExpiredAt && isValidService && isValidUser;
@@ -56,9 +56,15 @@ export class AuthenticationService {
   }
 
   public async fetchAuthorization(token: string, clientHash?: string): Promise<AuthorizationEntity> {
+    let where: ObjectLiteral = { token };
+
+    if (clientHash) {
+      where = { ...where, clientHash };
+    }
+
     const authorizationEntity = await this.authorizationsRepository.findOne({
       select: ['id', 'serviceId', 'userId', 'clientHash', 'expiredAt'],
-      where: { token, clientHash },
+      where,
       order: { id: 'DESC' },
     });
 

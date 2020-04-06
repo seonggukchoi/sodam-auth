@@ -1,7 +1,7 @@
 import { Controller, HttpException, HttpStatus, Post, Req, Headers, Body, Delete, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
-import { ClientHashService } from '../shared/client-hash';
-import { MasterGuard } from '../shared/guards';
+import { ClientHashService } from '../shared/client-hash/client-hash.service';
+import { MasterGuard } from '../shared/guards/master.guard';
 import { AuthorizationEntity } from '../../entities';
 import { AuthenticationService } from './authentication.service';
 import { UserSourceType } from '../../types/users';
@@ -17,7 +17,7 @@ export class AuthenticationController {
   public async login(
     @Req() request: Request,
     @Headers('user-agent') userAgent: string,
-    @Body('service_id') serviceId: number,
+    @Body('serviceId') serviceId: number,
     @Body('email') email: string,
     @Body('password') password: string,
     @Body('source') source: UserSourceType,
