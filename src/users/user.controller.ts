@@ -3,9 +3,7 @@ import { MasterGuard } from '../shared/guards';
 import { UserEntity } from '../../entities';
 import { UserService } from './user.service';
 
-@Controller({
-  path: '/users',
-})
+@Controller({ path: '/users' })
 export class UserController {
   constructor(
     @Inject(UserService) private readonly userService: UserService,

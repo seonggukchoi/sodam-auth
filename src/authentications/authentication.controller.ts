@@ -6,9 +6,7 @@ import { AuthorizationEntity } from '../../entities';
 import { AuthenticationService } from './authentication.service';
 import { UserSourceType } from '../../types/users';
 
-@Controller({
-  path: '/authentications',
-})
+@Controller({ path: '/authentications' })
 export class AuthenticationController {
   constructor(
     private readonly authenticationService: AuthenticationService,
