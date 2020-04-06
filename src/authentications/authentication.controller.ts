@@ -32,7 +32,7 @@ export class AuthenticationController {
     try {
       authorizationEntity = await this.authenticationService.login(serviceId, email, password, source, clientHash);
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
 
     return authorizationEntity;
@@ -52,7 +52,7 @@ export class AuthenticationController {
     try {
       isValidPermission = await this.authenticationService.checkPermission(token, clientHash);
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
 
     return isValidPermission;
@@ -64,7 +64,7 @@ export class AuthenticationController {
     try {
       await this.authenticationService.truncateAuthorizations();
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     return true;

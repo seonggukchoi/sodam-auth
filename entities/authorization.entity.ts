@@ -18,7 +18,7 @@ export class AuthorizationEntity {
   public clientHash?: string;
 
   @Column('timestamp', { name: 'expired_at' })
-  public expierdAt: Date;
+  public expiredAt: Date;
 
   @Column('timestamp', { name: 'created_at', default: () => 'CURRENT_TIMESTAMP' })
   public createdAt: Date;

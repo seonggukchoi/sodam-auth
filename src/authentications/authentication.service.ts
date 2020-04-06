@@ -19,7 +19,7 @@ export class AuthenticationService {
     const userEntity = await this.userService.authenticateUser(serviceId, email, password, source);
 
     if (!userEntity) {
-      throw new Error('Cannot authenticate user');
+      throw new Error('Invalid user information.');
     }
 
     const userId = userEntity.id;
@@ -34,30 +34,30 @@ export class AuthenticationService {
     const tokenPayload = <ITokenPayload>jwt.decode(token);
     const authorizationEntity = await this.fetchAuthorization(token, clientHash);
 
-    const authorizationsExpiredAt = moment(authorizationEntity.expierdAt).startOf('second').utc();
+    const authorizationsExpiredAt = moment(authorizationEntity.expiredAt).startOf('second').utc();
     const tokenExpiredAt = moment(tokenPayload.exp * 1000).utc();
     const isSameExpiredAt = authorizationsExpiredAt.isSame(tokenExpiredAt);
 
     if (!isSameExpiredAt) {
-      throw new Error('Not valid expired at');
+      throw new Error('Invalid expiredAt.');
     }
 
     const isValidService = tokenPayload.serviceId === authorizationEntity.serviceId;
 
     if (!isValidService) {
-      throw new Error('Not valid service');
+      throw new Error('Invalid service.');
     }
 
     const isValidUser = tokenPayload.userId === authorizationEntity.userId;
 
     if (!isValidUser) {
-      throw new Error('Not valid user');
+      throw new Error('Invalid user.');
     }
 
-    const isExpired = moment(authorizationEntity.expierdAt).utc().isBefore(moment().utc());
+    const isExpired = moment(authorizationEntity.expiredAt).utc().isBefore(moment().utc());
 
     if (isExpired) {
-      throw new Error('Token is expired');
+      throw new Error('Token is expired.');
     }
 
     return !!authorizationEntity;
@@ -65,13 +65,13 @@ export class AuthenticationService {
 
   public async fetchAuthorization(token: string, clientHash?: string): Promise<AuthorizationEntity> {
     const authorizationEntity = await this.authorizationsRepository.findOne({
-      select: ['id', 'serviceId', 'userId', 'clientHash', 'expierdAt'],
+      select: ['id', 'serviceId', 'userId', 'clientHash', 'expiredAt'],
       where: { token, clientHash },
       order: { id: 'DESC' },
     });
 
     if (!authorizationEntity) {
-      throw new Error('Cannot find authorization');
+      throw new Error('Not found authorization.');
     }
 
     return authorizationEntity;
@@ -85,37 +85,39 @@ export class AuthenticationService {
     });
 
     if (!authorizationEntities) {
-      throw new Error('Cannot find authorizations');
+      throw new Error('Not found authorizations.');
     }
 
     const authorizationIds = authorizationEntities.map(authorizationEntity => authorizationEntity.id);
 
     if (authorizationIds && authorizationIds.length > 0) {
-      await this.authorizationsRepository.update(authorizationIds, { expierdAt: new Date() });
+      await this.authorizationsRepository.update(authorizationIds, { expiredAt: new Date() });
     }
 
     return true;
   }
 
   public async insertAuthorization(serviceId: number, userId: number, token: string, clientHash: string): Promise<AuthorizationEntity> {
-    const userEntity = this.authorizationsRepository.create();
-
     const expiresInComponent = this.getExpiresInComponent();
     const expiresInAmount = <moment.DurationInputArg1>expiresInComponent.expiresInAmount;
     const expiresInUnit = <moment.DurationInputArg2>expiresInComponent.expiresInUnit;
     const expiredAt = moment().utc().add(expiresInAmount, expiresInUnit).toDate();
 
+    const userEntity = this.authorizationsRepository.create();
+
     userEntity.serviceId = serviceId;
     userEntity.userId = userId;
     userEntity.token = token;
     userEntity.clientHash = clientHash;
-    userEntity.expierdAt = expiredAt;
+    userEntity.expiredAt = expiredAt;
 
     return this.authorizationsRepository.save(userEntity);
   }
 
   public async truncateAuthorizations(): Promise<boolean> {
-    return this.authorizationsRepository.query('TRUNCATE TABLE authorizations;');
+    await this.authorizationsRepository.query('TRUNCATE TABLE authorizations;');
+
+    return true;
   }
 
   private signToken(serviceId: number, userId: number, email: string, clientHash: string): string {
