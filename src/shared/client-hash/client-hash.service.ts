@@ -8,16 +8,13 @@ export class ClientHashService {
     const secretKey = config.get<string>('authentication.secret_key');
 
     const clientHashDataOrigin = `${ ip }-${ userAgent }-${ secretKey }`;
-    const clientHashData = this.modifyClientHashData(clientHashDataOrigin);
+    const clientHashData = this.reverseClientHashData(clientHashDataOrigin);
     const hash = crypto.createHash('sha256').update(clientHashData).digest('hex');
 
     return hash;
   }
 
-  private modifyClientHashData(data: string): string {
-    return data
-    .split('')
-    .reduceRight<string[]>((array, char) => array.concat(char), [])
-    .join('');
+  private reverseClientHashData(data: string): string {
+    return data.split('').reverse().join('');
   }
 }
