@@ -26,7 +26,7 @@ export class UserService {
     });
 
     if (!userEntities) {
-      throw new Error('Cannot find users');
+      throw new Error('Not found users.');
     }
 
     return userEntities;
@@ -48,13 +48,13 @@ export class UserService {
     });
 
     if (!userEntity) {
-      throw new Error('Cannot find user');
+      throw new Error('Not found user.');
     }
 
     return userEntity;
   }
 
-  public async insertUser(userInput: UserEntity): Promise<UserEntity> {
+  public async insertUser(userInput: Pick<UserEntity, 'serviceId' | 'source' | 'email' | 'password' | 'name'>): Promise<UserEntity> {
     const userEntity = this.usersRepository.create();
 
     userEntity.serviceId = userInput.serviceId;
@@ -66,14 +66,14 @@ export class UserService {
     return this.usersRepository.save(userEntity);
   }
 
-  public async updateUser(userId: number, userInput: UserEntity): Promise<UserEntity> {
+  public async updateUser(userId: number, userInput: Pick<UserEntity, 'email' | 'password' | 'source' | 'name'>): Promise<UserEntity> {
     const existUserEntity = await this.usersRepository.findOne({
-      select: ['id', 'email', 'password', 'lastAuthenticatedAt'],
+      select: ['id', 'email', 'password', 'name'],
       where: { email: userInput.email, source: userInput.source },
     });
 
     if (existUserEntity) {
-      throw new Error('Email exists already');
+      throw new Error('Email exists already.');
     }
 
     const userEntity = await this.fetchUser(userId);
@@ -82,18 +82,13 @@ export class UserService {
     userEntity.password = userInput.password;
     userEntity.name = userInput.name;
 
-    userEntity.updatedAt = new Date();
-
     return this.usersRepository.save(userEntity);
   }
 
   public async deleteUser(userId: number): Promise<UserEntity> {
     const userEntity = await this.fetchUser(userId);
 
-    const currentTime = new Date();
-
-    userEntity.deletedAt = currentTime;
-    userEntity.updatedAt = currentTime;
+    userEntity.deletedAt = new Date();
 
     return this.usersRepository.save(userEntity);
   }
@@ -105,14 +100,14 @@ export class UserService {
     });
 
     if (!userEntity) {
-      throw new Error('Cannot find user by email');
+      throw new Error('Not found user by email.');
     }
 
     const isValidEmail = !!userEntity;
     const isValidPassword = password === userEntity.password;
 
     if (!isValidEmail || !isValidPassword) {
-      throw new Error('Not valid login information');
+      throw new Error('Invalid user information.');
     }
 
     userEntity.lastAuthenticatedAt = new Date();
@@ -121,6 +116,8 @@ export class UserService {
   }
 
   public async truncateUsers(): Promise<boolean> {
-    return this.usersRepository.query('TRUNCATE TABLE users;');
+    await this.usersRepository.query('TRUNCATE TABLE users;');
+
+    return true;
   }
 }

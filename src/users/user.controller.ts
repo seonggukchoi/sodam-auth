@@ -41,11 +41,12 @@ export class UserController {
 
   @Post('/')
   public async insertUser(
-    @Body() userInput: UserEntity,
+    @Body() userInput: Pick<UserEntity, 'serviceId' | 'source' | 'email' | 'password' | 'name'>,
   ): Promise<UserEntity> {
     let userEntity: UserEntity | null = null;
 
     try {
+      // TODO Add validator
       userEntity = await this.userService.insertUser(userInput);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -57,11 +58,12 @@ export class UserController {
   @Put('/:userId')
   public async updateUser(
     @Param('userId') userId: number,
-    @Body() userInput: UserEntity,
+    @Body() userInput: Pick<UserEntity, 'email' | 'password' | 'source' | 'name'>,
   ): Promise<UserEntity> {
     let userEntity: UserEntity | null = null;
 
     try {
+      // TODO Add validator
       userEntity = await this.userService.updateUser(userId, userInput);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -76,7 +78,7 @@ export class UserController {
     try {
       await this.userService.truncateUsers();
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.UNAUTHORIZED);
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     return true;
