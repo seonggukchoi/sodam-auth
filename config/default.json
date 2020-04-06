@@ -8,7 +8,11 @@
     "username": "sodam_auth",
     "password": "SodamAuth2020!",
     "database": "sodam_auth",
-    "synchronize": true
+    "synchronize": true,
+    "logging": "none",
+    "extra": {
+      "connectionLimit": 30
+    }
   },
   "authentication": {
     "secret_key": "TEST",
