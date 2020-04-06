@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
-import { HealthModule } from '../health/health.module';
-import { AuthenticationModule } from '../authentications/authentication.module';
-import { UserModule } from '../users/user.module';
-import { ServiceModule } from '../services/service.module';
+import { HealthModule } from '../health';
+import { AuthenticationModule } from '../authentications';
+import { UserModule } from '../users';
+import { ServiceModule } from '../services';
 
 @Module({
   imports: [

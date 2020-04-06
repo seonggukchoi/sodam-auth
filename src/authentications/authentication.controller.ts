@@ -1,7 +1,7 @@
 import { Controller, HttpException, HttpStatus, Post, Req, Headers, Body, Delete, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
-import { ClientHashService } from '../shared/client-hash/client-hash.service';
-import { MasterGuard } from '../shared/guards/master.guard';
+import { ClientHashService } from '../shared/client-hash';
+import { MasterGuard } from '../shared/guards';
 import { AuthorizationEntity } from '../../entities';
 import { AuthenticationService } from './authentication.service';
 import { UserSourceType } from '../../types/users';

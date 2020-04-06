@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { DatabaseModule } from '../shared/database.module';
-import { GuardModule } from '../shared/guards/guard.module';
+import { DatabaseModule } from '../shared';
+import { GuardModule } from '../shared/guards';
 import { ServiceController } from './service.controller';
 import { ServiceService } from './service.service';
 

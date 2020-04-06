@@ -1,5 +1,5 @@
 import { Controller, HttpException, HttpStatus, Inject, UseGuards, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
-import { MasterGuard } from '../shared/guards/master.guard';
+import { MasterGuard } from '../shared/guards';
 import { ServiceService } from './service.service';
 import { ServiceEntity } from '../../entities';
 
