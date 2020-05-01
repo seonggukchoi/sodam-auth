@@ -4,7 +4,7 @@ Integrated authentication server for Project Sodam
 
 ## Initialize
 
-PostgreSQL server required on your machine first.
+MySQL server required on your machine first.
 
 ```bash
 git clone https://github.com/seonggukchoi/sodam-auth.git
