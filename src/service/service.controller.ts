@@ -19,7 +19,7 @@ import { ServiceProvider } from './service.provider';
 @Controller({ path: 'services' })
 @UseGuards(MasterGuard)
 export class ServiceController {
-  constructor(private readonly serviceService: ServiceProvider) { }
+  constructor(private readonly serviceService: ServiceProvider) {}
 
   @Get('/')
   public async getServices(): Promise<ServiceEntity[]> {
@@ -68,13 +68,16 @@ export class ServiceController {
   @Put('/:serviceId')
   public async updateService(
     @Param('serviceId') serviceId: number,
-      @Body() serviceInput: Pick<ServiceEntity, 'name' | 'masterToken'>,
+    @Body() serviceInput: Pick<ServiceEntity, 'name' | 'masterToken'>,
   ): Promise<ServiceEntity> {
     let serviceEntity: ServiceEntity | null = null;
 
     try {
       // TODO Add validator
-      serviceEntity = await this.serviceService.updateService(serviceId, serviceInput);
+      serviceEntity = await this.serviceService.updateService(
+        serviceId,
+        serviceInput,
+      );
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }

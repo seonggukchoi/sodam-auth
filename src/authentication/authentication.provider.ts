@@ -13,12 +13,24 @@ import { UserProvider } from '@/user/user.provider';
 @Injectable()
 export class AuthenticationProvider {
   constructor(
-    @InjectRepository(AuthorizationEntity) private readonly authorizationsRepository: Repository<AuthorizationEntity>,
+    @InjectRepository(AuthorizationEntity)
+    private readonly authorizationsRepository: Repository<AuthorizationEntity>,
     @Inject(UserProvider) private readonly userService: UserProvider,
-  ) { }
+  ) {}
 
-  public async login(serviceId: number, email: string, password: string, source: UserSourceType, clientHash: string): Promise<AuthorizationEntity> {
-    const userEntity = await this.userService.authenticateUser(serviceId, email, password, source);
+  public async login(
+    serviceId: number,
+    email: string,
+    password: string,
+    source: UserSourceType,
+    clientHash: string,
+  ): Promise<AuthorizationEntity> {
+    const userEntity = await this.userService.authenticateUser(
+      serviceId,
+      email,
+      password,
+      source,
+    );
 
     if (!userEntity) {
       throw new Error('Invalid user information.');
@@ -32,15 +44,25 @@ export class AuthenticationProvider {
     return this.insertAuthorization(serviceId, userId, token, clientHash);
   }
 
-  public async checkPermission(token: string, clientHash?: string): Promise<boolean> {
+  public async checkPermission(
+    token: string,
+    clientHash?: string,
+  ): Promise<boolean> {
     const tokenPayload = <ITokenPayload>jwt.decode(token);
-    const authorizationEntity = await this.fetchAuthorization(token, clientHash);
+    const authorizationEntity = await this.fetchAuthorization(
+      token,
+      clientHash,
+    );
 
-    const authorizationsExpiredAt = moment(authorizationEntity.expiredAt).startOf('second').utc();
+    const authorizationsExpiredAt = moment(authorizationEntity.expiredAt)
+      .startOf('second')
+      .utc();
     const tokenExpiredAt = moment(tokenPayload.exp * 1000).utc();
 
-    const isSameExpiredAt = authorizationsExpiredAt.diff(tokenExpiredAt, 'second') < 3;
-    const isValidService = tokenPayload.serviceId === authorizationEntity.serviceId;
+    const isSameExpiredAt =
+      authorizationsExpiredAt.diff(tokenExpiredAt, 'second') < 3;
+    const isValidService =
+      tokenPayload.serviceId === authorizationEntity.serviceId;
     const isValidUser = tokenPayload.userId === authorizationEntity.userId;
     const isValidToken = isSameExpiredAt && isValidService && isValidUser;
 
@@ -48,7 +70,9 @@ export class AuthenticationProvider {
       throw new Error('Invalid token.');
     }
 
-    const isExpired = moment(authorizationEntity.expiredAt).utc().isBefore(moment().utc());
+    const isExpired = moment(authorizationEntity.expiredAt)
+      .utc()
+      .isBefore(moment().utc());
 
     if (isExpired) {
       throw new Error('Token is expired.');
@@ -57,7 +81,10 @@ export class AuthenticationProvider {
     return !!authorizationEntity;
   }
 
-  public async fetchAuthorization(token: string, clientHash?: string): Promise<AuthorizationEntity> {
+  public async fetchAuthorization(
+    token: string,
+    clientHash?: string,
+  ): Promise<AuthorizationEntity> {
     let where: ObjectLiteral = { token };
 
     if (clientHash) {
@@ -77,7 +104,11 @@ export class AuthenticationProvider {
     return authorizationEntity;
   }
 
-  public async expireAuthorizations(serviceId: number, userId: number, clientHash: string): Promise<boolean> {
+  public async expireAuthorizations(
+    serviceId: number,
+    userId: number,
+    clientHash: string,
+  ): Promise<boolean> {
     const authorizationEntities = await this.authorizationsRepository.find({
       select: ['id'],
       where: { serviceId, userId, clientHash },
@@ -88,20 +119,36 @@ export class AuthenticationProvider {
       throw new Error('Not found authorizations.');
     }
 
-    const authorizationIds = authorizationEntities.map(authorizationEntity => authorizationEntity.id);
+    const authorizationIds = authorizationEntities.map(
+      authorizationEntity => authorizationEntity.id,
+    );
 
     if (authorizationIds && authorizationIds.length > 0) {
-      await this.authorizationsRepository.update(authorizationIds, { expiredAt: new Date() });
+      await this.authorizationsRepository.update(authorizationIds, {
+        expiredAt: new Date(),
+      });
     }
 
     return true;
   }
 
-  public async insertAuthorization(serviceId: number, userId: number, token: string, clientHash: string): Promise<AuthorizationEntity> {
+  public async insertAuthorization(
+    serviceId: number,
+    userId: number,
+    token: string,
+    clientHash: string,
+  ): Promise<AuthorizationEntity> {
     const expiresInComponent = this.getExpiresInComponent();
-    const expiresInAmount = <moment.DurationInputArg1>expiresInComponent.expiresInAmount;
-    const expiresInUnit = <moment.DurationInputArg2>expiresInComponent.expiresInUnit;
-    const expiredAt = moment().utc().add(expiresInAmount, expiresInUnit).toDate();
+    const expiresInAmount = <moment.DurationInputArg1>(
+      expiresInComponent.expiresInAmount
+    );
+    const expiresInUnit = <moment.DurationInputArg2>(
+      expiresInComponent.expiresInUnit
+    );
+    const expiredAt = moment()
+      .utc()
+      .add(expiresInAmount, expiresInUnit)
+      .toDate();
 
     const userEntity = this.authorizationsRepository.create();
 
@@ -120,28 +167,46 @@ export class AuthenticationProvider {
     return true;
   }
 
-  private signToken(serviceId: number, userId: number, email: string, clientHash: string): string {
+  private signToken(
+    serviceId: number,
+    userId: number,
+    email: string,
+    clientHash: string,
+  ): string {
     const secretKey = config.get<string>('authentication.secret_key');
     const expiresIn = this.getExpiresIn();
 
-    const tokenPayload = <ITokenPayload>{ serviceId, userId, email, clientHash };
+    const tokenPayload = <ITokenPayload>{
+      serviceId,
+      userId,
+      email,
+      clientHash,
+    };
     const tokenOptions = <jwt.SignOptions>{ expiresIn };
 
     return jwt.sign(tokenPayload, secretKey, tokenOptions);
   }
 
   private getExpiresInComponent(): IExpiresInComponent {
-    const expiresInAmount = config.get<number>('authentication.sign_options.expires_in_amount');
-    const expiresInUnit = config.get<string>('authentication.sign_options.expires_in_unit');
+    const expiresInAmount = config.get<number>(
+      'authentication.sign_options.expires_in_amount',
+    );
+    const expiresInUnit = config.get<string>(
+      'authentication.sign_options.expires_in_unit',
+    );
 
     return { expiresInAmount, expiresInUnit };
   }
 
   private getExpiresIn(): string {
-    const expiresInAmount = config.get<number>('authentication.sign_options.expires_in_amount');
-    const expiresInUnit = config.get<string>('authentication.sign_options.expires_in_unit');
+    const expiresInAmount = config.get<number>(
+      'authentication.sign_options.expires_in_amount',
+    );
+    const expiresInUnit = config.get<string>(
+      'authentication.sign_options.expires_in_unit',
+    );
 
-    return `${ expiresInAmount } ${ expiresInUnit }`;
+    return `${expiresInAmount} ${expiresInUnit}`;
   }
 }
 

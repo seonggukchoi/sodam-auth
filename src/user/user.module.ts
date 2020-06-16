@@ -8,12 +8,9 @@ import { UserController } from './user.controller';
 import { UserProvider } from './user.provider';
 
 @Module({
-  imports: [
-    GuardModule,
-    forwardRef(() => AuthenticationModule),
-  ],
+  imports: [GuardModule, forwardRef(() => AuthenticationModule)],
   exports: [UserProvider],
   controllers: [UserController],
   providers: [UserProvider],
 })
-export class UserModule { }
+export class UserModule {}

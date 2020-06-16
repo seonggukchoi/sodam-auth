@@ -9,8 +9,9 @@ import { UserSourceType } from './user.interface';
 @Injectable()
 export class UserProvider {
   constructor(
-    @InjectRepository(UserEntity) private readonly usersRepository: Repository<UserEntity>,
-  ) { }
+    @InjectRepository(UserEntity)
+    private readonly usersRepository: Repository<UserEntity>,
+  ) {}
 
   public async fetchUsers(): Promise<UserEntity[]> {
     const userEntities = await this.usersRepository.find({
@@ -58,7 +59,12 @@ export class UserProvider {
     return userEntity;
   }
 
-  public async insertUser(userInput: Pick<UserEntity, 'serviceId' | 'source' | 'email' | 'password' | 'name'>): Promise<UserEntity> {
+  public async insertUser(
+    userInput: Pick<
+      UserEntity,
+      'serviceId' | 'source' | 'email' | 'password' | 'name'
+    >,
+  ): Promise<UserEntity> {
     const userEntity = this.usersRepository.create();
 
     userEntity.serviceId = userInput.serviceId;
@@ -70,7 +76,10 @@ export class UserProvider {
     return this.usersRepository.save(userEntity);
   }
 
-  public async updateUser(userId: number, userInput: Pick<UserEntity, 'email' | 'password' | 'source' | 'name'>): Promise<UserEntity> {
+  public async updateUser(
+    userId: number,
+    userInput: Pick<UserEntity, 'email' | 'password' | 'source' | 'name'>,
+  ): Promise<UserEntity> {
     const existUserEntity = await this.usersRepository.findOne({
       select: ['id', 'email', 'password', 'name'],
       where: { email: userInput.email, source: userInput.source },
@@ -97,7 +106,12 @@ export class UserProvider {
     return this.usersRepository.save(userEntity);
   }
 
-  public async authenticateUser(serviceId: number, email: string, password: string, source: UserSourceType): Promise<UserEntity> {
+  public async authenticateUser(
+    serviceId: number,
+    email: string,
+    password: string,
+    source: UserSourceType,
+  ): Promise<UserEntity> {
     const userEntity = await this.usersRepository.findOne({
       select: ['id', 'email', 'password', 'lastAuthenticatedAt'],
       where: { serviceId, email, source },

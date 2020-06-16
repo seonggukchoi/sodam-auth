@@ -18,4 +18,4 @@ const databaseConfig = <TypeOrmModuleOptions>{
   controllers: [],
   providers: [],
 })
-export class DatabaseModule { }
+export class DatabaseModule {}

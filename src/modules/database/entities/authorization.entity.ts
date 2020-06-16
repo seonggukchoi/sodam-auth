@@ -20,6 +20,9 @@ export class AuthorizationEntity {
   @Column('timestamp', { name: 'expired_at' })
   public expiredAt: Date;
 
-  @Column('timestamp', { name: 'created_at', default: () => 'CURRENT_TIMESTAMP' })
+  @Column('timestamp', {
+    name: 'created_at',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
   public createdAt: Date;
 }

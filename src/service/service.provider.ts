@@ -8,8 +8,9 @@ import { ServiceEntity } from '@/modules/database/entities';
 @Injectable()
 export class ServiceProvider {
   constructor(
-    @InjectRepository(ServiceEntity) private readonly servicesRepository: Repository<ServiceEntity>,
-  ) { }
+    @InjectRepository(ServiceEntity)
+    private readonly servicesRepository: Repository<ServiceEntity>,
+  ) {}
 
   public async fetchServices(): Promise<ServiceEntity[]> {
     const serviceEntities = await this.servicesRepository.find({
@@ -39,7 +40,9 @@ export class ServiceProvider {
     return serviceEntity;
   }
 
-  public async insertService(serviceInput: Pick<ServiceEntity, 'name' | 'masterToken'>): Promise<ServiceEntity> {
+  public async insertService(
+    serviceInput: Pick<ServiceEntity, 'name' | 'masterToken'>,
+  ): Promise<ServiceEntity> {
     const serviceEntity = this.servicesRepository.create();
 
     serviceEntity.name = serviceInput.name;
@@ -48,7 +51,10 @@ export class ServiceProvider {
     return this.servicesRepository.save(serviceEntity);
   }
 
-  public async updateService(serviceId: number, serviceInput: Pick<ServiceEntity, 'name' | 'masterToken'>): Promise<ServiceEntity> {
+  public async updateService(
+    serviceId: number,
+    serviceInput: Pick<ServiceEntity, 'name' | 'masterToken'>,
+  ): Promise<ServiceEntity> {
     const serviceEntity = await this.servicesRepository.findOne({
       select: ['id', 'name', 'masterToken'],
       where: { id: serviceId, deletedAt: null },
@@ -59,8 +65,12 @@ export class ServiceProvider {
       throw new Error('Not found service.');
     }
 
-    if (isString(serviceInput.name)) { serviceEntity.name = serviceInput.name; }
-    if (isString(serviceInput.masterToken)) { serviceEntity.masterToken = serviceInput.masterToken; }
+    if (isString(serviceInput.name)) {
+      serviceEntity.name = serviceInput.name;
+    }
+    if (isString(serviceInput.masterToken)) {
+      serviceEntity.masterToken = serviceInput.masterToken;
+    }
 
     return this.servicesRepository.save(serviceEntity);
   }

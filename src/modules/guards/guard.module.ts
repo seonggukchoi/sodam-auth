@@ -5,14 +5,8 @@ import { UserGuard } from './user.guard';
 
 @Module({
   imports: [forwardRef(() => AuthenticationModule)],
-  exports: [
-    MasterGuard,
-    UserGuard,
-  ],
+  exports: [MasterGuard, UserGuard],
   controllers: [],
-  providers: [
-    MasterGuard,
-    UserGuard,
-  ],
+  providers: [MasterGuard, UserGuard],
 })
-export class GuardModule { }
+export class GuardModule {}

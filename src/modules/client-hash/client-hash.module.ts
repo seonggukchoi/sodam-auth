@@ -7,4 +7,4 @@ import { ClientHashService } from './client-hash.service';
   controllers: [],
   providers: [ClientHashService],
 })
-export class ClientHashModule { }
+export class ClientHashModule {}

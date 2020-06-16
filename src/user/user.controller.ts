@@ -18,7 +18,7 @@ import { UserProvider } from './user.provider';
 
 @Controller({ path: '/users' })
 export class UserController {
-  constructor(private readonly userService: UserProvider) { }
+  constructor(private readonly userService: UserProvider) {}
 
   @Get('/')
   public async getUsers(): Promise<UserEntity[]> {
@@ -34,9 +34,7 @@ export class UserController {
   }
 
   @Get('/:userId')
-  public async getUser(
-    @Param('userId') userId: number,
-  ): Promise<UserEntity> {
+  public async getUser(@Param('userId') userId: number): Promise<UserEntity> {
     let userEntity: UserEntity | null = null;
 
     try {
@@ -50,7 +48,11 @@ export class UserController {
 
   @Post('/')
   public async insertUser(
-    @Body() userInput: Pick<UserEntity, 'serviceId' | 'source' | 'email' | 'password' | 'name'>,
+    @Body()
+    userInput: Pick<
+      UserEntity,
+      'serviceId' | 'source' | 'email' | 'password' | 'name'
+    >,
   ): Promise<UserEntity> {
     let userEntity: UserEntity | null = null;
 
@@ -67,7 +69,8 @@ export class UserController {
   @Put('/:userId')
   public async updateUser(
     @Param('userId') userId: number,
-      @Body() userInput: Pick<UserEntity, 'email' | 'password' | 'source' | 'name'>,
+    @Body()
+    userInput: Pick<UserEntity, 'email' | 'password' | 'source' | 'name'>,
   ): Promise<UserEntity> {
     let userEntity: UserEntity | null = null;
 

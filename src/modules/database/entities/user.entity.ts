@@ -3,7 +3,6 @@ import { UserSourceType } from '@/user/user.interface';
 
 @Entity('users')
 export class UserEntity {
-
   @PrimaryGeneratedColumn()
   public id: number;
 
@@ -25,10 +24,17 @@ export class UserEntity {
   @Column('timestamp', { name: 'last_authenticated_at', nullable: true })
   public lastAuthenticatedAt?: Date | null;
 
-  @Column('timestamp', { name: 'created_at', default: () => 'CURRENT_TIMESTAMP' })
+  @Column('timestamp', {
+    name: 'created_at',
+    default: () => 'CURRENT_TIMESTAMP',
+  })
   public createdAt: Date;
 
-  @Column('timestamp', { name: 'updated_at', default: () => 'CURRENT_TIMESTAMP', onUpdate: 'CURRENT_TIMESTAMP' })
+  @Column('timestamp', {
+    name: 'updated_at',
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
+  })
   public updatedAt: Date;
 
   @Column('timestamp', { name: 'deleted_at', nullable: true })
