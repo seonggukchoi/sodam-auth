@@ -22,7 +22,7 @@ describe('HealthController', () => {
     done();
   });
 
-  test.skip('getDatabaseHealth() - Database Status should be healthy.', async done => {
+  test('getDatabaseHealth() - Database Status should be healthy.', async done => {
     const result = await healthController.getDatabaseHealth();
 
     expect(result).toEqual('Database OK');

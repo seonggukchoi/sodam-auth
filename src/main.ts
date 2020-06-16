@@ -1,12 +1,14 @@
 import { NestFactory } from '@nestjs/core';
 import * as config from 'config';
+
 import { AppModule } from './app';
 
-async function bootstrap() {
-  const port = config.get<number>('port');
-  const app = await NestFactory.create(AppModule);
+async function bootstrap(): Promise<void> {
+  const applicationPort = config.get<number>('application.port');
+  const cors = config.get<boolean>('application.cors');
 
-  await app.listen(port);
+  const app = await NestFactory.create(AppModule, { cors });
+  await app.listen(applicationPort);
 }
 
 bootstrap();

@@ -57,7 +57,7 @@ export class ServiceController {
   @Put('/:serviceId')
   public async updateService(
     @Param('serviceId') serviceId: number,
-    @Body() serviceInput: Pick<ServiceEntity, 'name' | 'masterToken'>,
+      @Body() serviceInput: Pick<ServiceEntity, 'name' | 'masterToken'>,
   ): Promise<ServiceEntity> {
     let serviceEntity: ServiceEntity | null = null;
 
@@ -73,7 +73,7 @@ export class ServiceController {
 
   @Delete('/truncate')
   @UseGuards(MasterGuard)
-  public async truncateUsers() {
+  public async truncateUsers(): Promise<boolean> {
     try {
       await this.serviceService.truncateServices();
     } catch (error) {

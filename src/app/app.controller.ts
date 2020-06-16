@@ -1,10 +1,9 @@
-import { Controller, Get, Redirect } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 
 @Controller({ path: '/' })
 export class AppController {
   @Get('/')
-  @Redirect('/health')
-  public getRoot() {
+  public getRoot(): void {
     return;
   }
 }

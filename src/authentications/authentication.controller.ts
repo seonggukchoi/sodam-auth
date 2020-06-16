@@ -16,11 +16,11 @@ export class AuthenticationController {
   @Post('/login')
   public async login(
     @Req() request: Request,
-    @Headers('user-agent') userAgent: string,
-    @Body('serviceId') serviceId: number,
-    @Body('email') email: string,
-    @Body('password') password: string,
-    @Body('source') source: UserSourceType,
+      @Headers('user-agent') userAgent: string,
+      @Body('serviceId') serviceId: number,
+      @Body('email') email: string,
+      @Body('password') password: string,
+      @Body('source') source: UserSourceType,
   ): Promise<AuthorizationEntity> {
     const ip = request.ip;
     const clientHash = this.clientHashService.getClientHash(ip, userAgent);
@@ -40,8 +40,8 @@ export class AuthenticationController {
   @Post('/')
   public async authenticate(
     @Req() request: Request,
-    @Headers('user-agent') userAgent: string,
-    @Body('token') token: string,
+      @Headers('user-agent') userAgent: string,
+      @Body('token') token: string,
   ): Promise<boolean> {
     const ip = request.ip;
     const clientHash = this.clientHashService.getClientHash(ip, userAgent);
@@ -59,7 +59,7 @@ export class AuthenticationController {
 
   @Delete('/truncate')
   @UseGuards(MasterGuard)
-  public async truncateAuthorizations() {
+  public async truncateAuthorizations(): Promise<boolean> {
     try {
       await this.authenticationService.truncateAuthorizations();
     } catch (error) {

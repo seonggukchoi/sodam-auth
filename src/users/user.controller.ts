@@ -56,7 +56,7 @@ export class UserController {
   @Put('/:userId')
   public async updateUser(
     @Param('userId') userId: number,
-    @Body() userInput: Pick<UserEntity, 'email' | 'password' | 'source' | 'name'>,
+      @Body() userInput: Pick<UserEntity, 'email' | 'password' | 'source' | 'name'>,
   ): Promise<UserEntity> {
     let userEntity: UserEntity | null = null;
 
@@ -72,7 +72,7 @@ export class UserController {
 
   @Delete('/truncate')
   @UseGuards(MasterGuard)
-  public async truncateUsers() {
+  public async truncateUsers(): Promise<boolean> {
     try {
       await this.userService.truncateUsers();
     } catch (error) {

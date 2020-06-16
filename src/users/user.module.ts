@@ -9,7 +9,6 @@ import { UserService } from './user.service';
   imports: [
     DatabaseModule,
     GuardModule,
-    UserModule,
     forwardRef(() => AuthenticationModule),
   ],
   exports: [UserService],
