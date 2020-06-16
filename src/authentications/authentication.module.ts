@@ -1,6 +1,6 @@
 import { Module, forwardRef } from '@nestjs/common';
-import { DatabaseModule } from '../shared';
-import { ClientHashModule } from '../shared/client-hash';
+import { DatabaseModule } from '../modules';
+import { ClientHashModule } from '../modules/client-hash';
 import { UserModule } from '../users';
 import { AuthenticationController } from './authentication.controller';
 import { AuthenticationService } from './authentication.service';

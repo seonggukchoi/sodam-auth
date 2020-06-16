@@ -4,7 +4,7 @@ import { Repository, ObjectLiteral } from 'typeorm';
 import * as config from 'config';
 import * as jwt from 'jsonwebtoken';
 import * as moment from 'moment';
-import { AuthorizationEntity } from '../shared/database/entities';
+import { AuthorizationEntity } from '../modules/database/entities';
 import { UserSourceType } from '..//users/user.interface';
 import { UserService } from '../users/user.service';
 
