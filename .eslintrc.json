@@ -1,0 +1,29 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "ignorePatterns": ["node_modules/", "dist/", "pm2/"],
+  "plugins": [
+    "@typescript-eslint",
+    "jest"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:jest/recommended"
+  ],
+  "rules": {
+    "quotes": ["error", "single"],
+    "semi": ["error", "always"],
+    "comma-dangle": ["warn", "always-multiline"],
+    "@typescript-eslint/semi": ["error", "always"],
+    "@typescript-eslint/indent": ["warn", 2],
+    "@typescript-eslint/interface-name-prefix": ["error", { "prefixWithI": "always", "allowUnderscorePrefix": true }],
+    "@typescript-eslint/no-empty-interface": ["off"],
+    "@typescript-eslint/consistent-type-assertions": ["error", { "assertionStyle": "angle-bracket" }],
+    "@typescript-eslint/explicit-function-return-type": ["warn"],
+    "@typescript-eslint/no-unused-vars": ["off"],
+    "@typescript-eslint/camelcase": ["warn", {"properties": "always", "genericType": "always" }],
+    "jest/no-test-callback": ["off"]
+  }
+}
