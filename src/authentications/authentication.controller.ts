@@ -4,7 +4,7 @@ import { ClientHashService } from '../shared/client-hash';
 import { MasterGuard } from '../shared/guards';
 import { AuthorizationEntity } from '../shared/database/entities';
 import { AuthenticationService } from './authentication.service';
-import { UserSourceType } from '../../types/users';
+import { UserSourceType } from '../users/user.interface';
 
 @Controller({ path: '/authentications' })
 export class AuthenticationController {

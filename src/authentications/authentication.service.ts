@@ -5,7 +5,7 @@ import * as config from 'config';
 import * as jwt from 'jsonwebtoken';
 import * as moment from 'moment';
 import { AuthorizationEntity } from '../shared/database/entities';
-import { UserSourceType } from '../../types/users';
+import { UserSourceType } from '..//users/user.interface';
 import { UserService } from '../users/user.service';
 
 @Injectable()
