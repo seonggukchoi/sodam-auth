@@ -1,7 +1,20 @@
-import { Controller, HttpException, HttpStatus, Inject, UseGuards, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
-import { MasterGuard } from '../modules/guards';
+import {
+  Controller,
+  HttpException,
+  HttpStatus,
+  UseGuards,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Param,
+  Body,
+} from '@nestjs/common';
+
+import { MasterGuard } from '@/modules/guards';
+import { ServiceEntity } from '@/modules/database/entities';
+
 import { ServiceProvider } from './service.provider';
-import { ServiceEntity } from '../modules/database/entities';
 
 @Controller({ path: 'services' })
 @UseGuards(MasterGuard)

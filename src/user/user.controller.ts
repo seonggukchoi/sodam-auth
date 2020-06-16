@@ -1,6 +1,19 @@
-import { Controller, UseGuards, HttpException, HttpStatus, Inject, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
-import { MasterGuard } from '../modules/guards';
-import { UserEntity } from '../modules/database/entities';
+import {
+  Controller,
+  UseGuards,
+  HttpException,
+  HttpStatus,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
+} from '@nestjs/common';
+
+import { MasterGuard } from '@/modules/guards';
+import { UserEntity } from '@/modules/database/entities';
+
 import { UserProvider } from './user.provider';
 
 @Controller({ path: '/users' })

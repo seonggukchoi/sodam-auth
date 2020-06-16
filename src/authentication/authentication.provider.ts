@@ -4,9 +4,11 @@ import { Repository, ObjectLiteral } from 'typeorm';
 import * as config from 'config';
 import * as jwt from 'jsonwebtoken';
 import * as moment from 'moment';
-import { AuthorizationEntity } from '../modules/database/entities';
-import { UserSourceType } from '../user/user.interface';
-import { UserProvider } from '../user/user.provider';
+
+import { AuthorizationEntity } from '@/modules/database/entities';
+
+import { UserSourceType } from '@/user/user.interface';
+import { UserProvider } from '@/user/user.provider';
 
 @Injectable()
 export class AuthenticationProvider {
