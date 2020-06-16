@@ -2,7 +2,7 @@ import { Controller, HttpException, HttpStatus, Post, Req, Headers, Body, Delete
 import { Request } from 'express';
 import { ClientHashService } from '../shared/client-hash';
 import { MasterGuard } from '../shared/guards';
-import { AuthorizationEntity } from '../../entities';
+import { AuthorizationEntity } from '../shared/database/entities';
 import { AuthenticationService } from './authentication.service';
 import { UserSourceType } from '../../types/users';
 

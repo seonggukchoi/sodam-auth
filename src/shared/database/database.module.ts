@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import * as config from 'config';
-import entities from '../../entities';
+import { entities } from './entities';
 
 // Unfreeze object for TypeORM
 const databaseConfig = <TypeOrmModuleOptions>{
