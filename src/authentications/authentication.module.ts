@@ -1,5 +1,5 @@
-import { Module, forwardRef } from '@nestjs/common';
-import { DatabaseModule } from '../modules';
+import { Module } from '@nestjs/common';
+
 import { ClientHashModule } from '../modules/client-hash';
 import { UserModule } from '../users';
 import { AuthenticationController } from './authentication.controller';
@@ -7,7 +7,6 @@ import { AuthenticationService } from './authentication.service';
 
 @Module({
   imports: [
-    DatabaseModule,
     ClientHashModule,
     UserModule,
   ],
