@@ -6,9 +6,7 @@ import { ServiceEntity } from '../modules/database/entities';
 @Controller({ path: 'services' })
 @UseGuards(MasterGuard)
 export class ServiceController {
-  constructor(
-    @Inject(ServiceProvider) private readonly serviceService: ServiceProvider,
-  ) { }
+  constructor(private readonly serviceService: ServiceProvider) { }
 
   @Get('/')
   public async getServices(): Promise<ServiceEntity[]> {

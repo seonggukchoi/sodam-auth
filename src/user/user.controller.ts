@@ -5,9 +5,7 @@ import { UserProvider } from './user.provider';
 
 @Controller({ path: '/users' })
 export class UserController {
-  constructor(
-    @Inject(UserProvider) private readonly userService: UserProvider,
-  ) { }
+  constructor(private readonly userService: UserProvider) { }
 
   @Get('/')
   public async getUsers(): Promise<UserEntity[]> {
