@@ -3,13 +3,13 @@ import { Request } from 'express';
 import { ClientHashService } from '../modules/client-hash';
 import { MasterGuard } from '../guards';
 import { AuthorizationEntity } from '../modules/database/entities';
-import { AuthenticationService } from './authentication.service';
-import { UserSourceType } from '../users/user.interface';
+import { AuthenticationProvider } from './authentication.provider';
+import { UserSourceType } from '../user/user.interface';
 
 @Controller({ path: '/authentications' })
 export class AuthenticationController {
   constructor(
-    private readonly authenticationService: AuthenticationService,
+    private readonly authenticationService: AuthenticationProvider,
     private readonly clientHashService: ClientHashService,
   ) { }
 

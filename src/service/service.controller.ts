@@ -1,13 +1,13 @@
 import { Controller, HttpException, HttpStatus, Inject, UseGuards, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
 import { MasterGuard } from '../guards';
-import { ServiceService } from './service.service';
+import { ServiceProvider } from './service.provider';
 import { ServiceEntity } from '../modules/database/entities';
 
 @Controller({ path: 'services' })
 @UseGuards(MasterGuard)
 export class ServiceController {
   constructor(
-    @Inject(ServiceService) private readonly serviceService: ServiceService,
+    @Inject(ServiceProvider) private readonly serviceService: ServiceProvider,
   ) { }
 
   @Get('/')

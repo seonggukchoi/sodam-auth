@@ -1,5 +1,5 @@
 import { Module, forwardRef } from '@nestjs/common';
-import { AuthenticationModule } from '../authentications';
+import { AuthenticationModule } from '../authentication';
 import { MasterGuard } from './master.guard';
 import { UserGuard } from './user.guard';
 

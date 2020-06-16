@@ -1,10 +1,10 @@
 import { Injectable, Inject, CanActivate, ExecutionContext, HttpException, HttpStatus } from '@nestjs/common';
-import { AuthenticationService } from '../authentications/authentication.service';
+import { AuthenticationProvider } from '../authentication/authentication.provider';
 
 @Injectable()
 export class UserGuard implements CanActivate {
   constructor(
-    @Inject(AuthenticationService) private readonly authenticationService: AuthenticationService,
+    @Inject(AuthenticationProvider) private readonly authenticationService: AuthenticationProvider,
   ) { }
 
   public async canActivate(context: ExecutionContext): Promise<boolean> {

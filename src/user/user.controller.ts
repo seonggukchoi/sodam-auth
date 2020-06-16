@@ -1,12 +1,12 @@
 import { Controller, UseGuards, HttpException, HttpStatus, Inject, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
 import { MasterGuard } from '../guards';
 import { UserEntity } from '../modules/database/entities';
-import { UserService } from './user.service';
+import { UserProvider } from './user.provider';
 
 @Controller({ path: '/users' })
 export class UserController {
   constructor(
-    @Inject(UserService) private readonly userService: UserService,
+    @Inject(UserProvider) private readonly userService: UserProvider,
   ) { }
 
   @Get('/')

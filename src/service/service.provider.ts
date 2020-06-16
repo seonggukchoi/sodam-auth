@@ -5,7 +5,7 @@ import { isString } from 'util';
 import { ServiceEntity } from '../modules/database/entities';
 
 @Injectable()
-export class ServiceService {
+export class ServiceProvider {
   constructor(
     @InjectRepository(ServiceEntity) private readonly servicesRepository: Repository<ServiceEntity>,
   ) { }

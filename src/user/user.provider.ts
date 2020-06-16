@@ -5,7 +5,7 @@ import { UserEntity } from '../modules/database/entities';
 import { UserSourceType } from './user.interface';
 
 @Injectable()
-export class UserService {
+export class UserProvider {
   constructor(
     @InjectRepository(UserEntity) private readonly usersRepository: Repository<UserEntity>,
   ) { }

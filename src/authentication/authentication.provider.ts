@@ -5,14 +5,14 @@ import * as config from 'config';
 import * as jwt from 'jsonwebtoken';
 import * as moment from 'moment';
 import { AuthorizationEntity } from '../modules/database/entities';
-import { UserSourceType } from '..//users/user.interface';
-import { UserService } from '../users/user.service';
+import { UserSourceType } from '../user/user.interface';
+import { UserProvider } from '../user/user.provider';
 
 @Injectable()
-export class AuthenticationService {
+export class AuthenticationProvider {
   constructor(
     @InjectRepository(AuthorizationEntity) private readonly authorizationsRepository: Repository<AuthorizationEntity>,
-    @Inject(UserService) private readonly userService: UserService,
+    @Inject(UserProvider) private readonly userService: UserProvider,
   ) { }
 
   public async login(serviceId: number, email: string, password: string, source: UserSourceType, clientHash: string): Promise<AuthorizationEntity> {

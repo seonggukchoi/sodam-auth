@@ -2,12 +2,12 @@ import { Module } from '@nestjs/common';
 
 import { GuardModule } from '../guards';
 import { ServiceController } from './service.controller';
-import { ServiceService } from './service.service';
+import { ServiceProvider } from './service.provider';
 
 @Module({
   imports: [GuardModule],
-  exports: [ServiceService],
+  exports: [ServiceProvider],
   controllers: [ServiceController],
-  providers: [ServiceService],
+  providers: [ServiceProvider],
 })
 export class ServiceModule { }
