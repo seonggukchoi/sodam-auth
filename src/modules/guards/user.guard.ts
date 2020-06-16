@@ -1,5 +1,5 @@
 import { Injectable, Inject, CanActivate, ExecutionContext, HttpException, HttpStatus } from '@nestjs/common';
-import { AuthenticationProvider } from '../authentication/authentication.provider';
+import { AuthenticationProvider } from '../../authentication/authentication.provider';
 
 @Injectable()
 export class UserGuard implements CanActivate {

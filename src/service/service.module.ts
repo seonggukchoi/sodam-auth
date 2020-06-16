@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 
-import { GuardModule } from '../guards';
+import { GuardModule } from '../modules/guards';
 import { ServiceController } from './service.controller';
 import { ServiceProvider } from './service.provider';
 
