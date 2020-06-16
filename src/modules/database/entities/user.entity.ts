@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-import { UserSourceType, UserSources } from '../../../user/user.interface';
+import { UserSourceType } from '../../../user/user.interface';
 
 @Entity('users')
 export class UserEntity {
@@ -13,7 +13,7 @@ export class UserEntity {
   @Column('varchar', { length: 20 })
   public name: string;
 
-  @Column('enum', { enum: UserSources, default: 'direct' })
+  @Column('enum', { enum: UserSourceType, default: 'direct' })
   public source: UserSourceType;
 
   @Column('varchar', { length: 256 })
