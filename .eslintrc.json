@@ -1,6 +1,9 @@
 {
   "root": true,
   "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2020
+  },
   "ignorePatterns": ["node_modules/", "dist/", "pm2/"],
   "plugins": [
     "@typescript-eslint",
@@ -18,6 +21,8 @@
     "quotes": ["error", "single"],
     "semi": ["error", "always"],
     "comma-dangle": ["warn", "always-multiline"],
+    "space-before-function-paren": "off",
+    "no-use-before-define": "off",
     "@typescript-eslint/semi": ["error", "always"],
     "@typescript-eslint/indent": ["warn", 2],
     "@typescript-eslint/interface-name-prefix": ["error", { "prefixWithI": "always", "allowUnderscorePrefix": true }],
@@ -26,6 +31,12 @@
     "@typescript-eslint/explicit-function-return-type": ["warn"],
     "@typescript-eslint/no-unused-vars": ["off"],
     "@typescript-eslint/camelcase": ["warn", {"properties": "always", "genericType": "always" }],
+    "@typescript-eslint/space-before-function-paren": ["error", {
+      "anonymous": "never",
+      "named": "never",
+      "asyncArrow": "always"
+    }],
+    "@typescript-eslint/no-use-before-define": ["error", { "functions": false, "classes": false }],
     "jest/no-test-callback": ["off"]
   }
 }
