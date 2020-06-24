@@ -1,2 +1,2 @@
 export { ClientHashModule } from './client-hash.module';
-export { ClientHashService } from './client-hash.service';
+export { ClientHashProvider } from './client-hash.provider';

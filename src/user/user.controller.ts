@@ -18,14 +18,14 @@ import { UserProvider } from './user.provider';
 
 @Controller({ path: '/users' })
 export class UserController {
-  constructor(private readonly userService: UserProvider) {}
+  constructor(private readonly userProvider: UserProvider) {}
 
   @Get('/')
   public async getUsers(): Promise<UserEntity[]> {
     let userEntities: UserEntity[] | null = null;
 
     try {
-      userEntities = await this.userService.fetchUsers();
+      userEntities = await this.userProvider.fetchUsers();
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -38,7 +38,7 @@ export class UserController {
     let userEntity: UserEntity | null = null;
 
     try {
-      userEntity = await this.userService.fetchUser(userId);
+      userEntity = await this.userProvider.fetchUser(userId);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -58,7 +58,7 @@ export class UserController {
 
     try {
       // TODO Add validator
-      userEntity = await this.userService.insertUser(userInput);
+      userEntity = await this.userProvider.insertUser(userInput);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -76,7 +76,7 @@ export class UserController {
 
     try {
       // TODO Add validator
-      userEntity = await this.userService.updateUser(userId, userInput);
+      userEntity = await this.userProvider.updateUser(userId, userInput);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -88,7 +88,7 @@ export class UserController {
   @UseGuards(MasterGuard)
   public async truncateUsers(): Promise<boolean> {
     try {
-      await this.userService.truncateUsers();
+      await this.userProvider.truncateUsers();
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -103,7 +103,7 @@ export class UserController {
     let userEntity: UserEntity | null = null;
 
     try {
-      userEntity = await this.userService.deleteUser(userId);
+      userEntity = await this.userProvider.deleteUser(userId);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }

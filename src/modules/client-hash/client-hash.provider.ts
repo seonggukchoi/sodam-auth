@@ -3,7 +3,7 @@ import * as crypto from 'crypto';
 import * as config from 'config';
 
 @Injectable()
-export class ClientHashService {
+export class ClientHashProvider {
   public getClientHash(ip: string, userAgent: string): string {
     const secretKey = config.get<string>('authentication.secret_key');
 

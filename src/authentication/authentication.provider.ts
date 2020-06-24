@@ -15,7 +15,7 @@ export class AuthenticationProvider {
   constructor(
     @InjectRepository(AuthorizationEntity)
     private readonly authorizationsRepository: Repository<AuthorizationEntity>,
-    @Inject(UserProvider) private readonly userService: UserProvider,
+    @Inject(UserProvider) private readonly userProvider: UserProvider,
   ) {}
 
   public async login(
@@ -25,7 +25,7 @@ export class AuthenticationProvider {
     source: UserSourceType,
     clientHash: string,
   ): Promise<AuthorizationEntity> {
-    const userEntity = await this.userService.authenticateUser(
+    const userEntity = await this.userProvider.authenticateUser(
       applicationId,
       email,
       password,

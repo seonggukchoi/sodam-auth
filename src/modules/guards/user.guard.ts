@@ -12,7 +12,7 @@ import { AuthenticationProvider } from '../../authentication/authentication.prov
 export class UserGuard implements CanActivate {
   constructor(
     @Inject(AuthenticationProvider)
-    private readonly authenticationService: AuthenticationProvider,
+    private readonly authenticationProvider: AuthenticationProvider,
   ) {}
 
   public async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -26,7 +26,7 @@ export class UserGuard implements CanActivate {
     let isValidToken = false;
 
     try {
-      isValidToken = await this.authenticationService.checkPermission(token);
+      isValidToken = await this.authenticationProvider.checkPermission(token);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.FORBIDDEN);
     }

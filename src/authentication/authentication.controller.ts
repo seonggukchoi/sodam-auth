@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 
-import { ClientHashService } from '@/modules/client-hash';
+import { ClientHashProvider } from '@/modules/client-hash';
 import { MasterGuard } from '@/modules/guards';
 import { AuthorizationEntity } from '@/modules/database/entities';
 
@@ -22,8 +22,8 @@ import { AuthenticationProvider } from './authentication.provider';
 @Controller({ path: '/authentications' })
 export class AuthenticationController {
   constructor(
-    private readonly authenticationService: AuthenticationProvider,
-    private readonly clientHashService: ClientHashService,
+    private readonly authenticationProvider: AuthenticationProvider,
+    private readonly clientHashProvider: ClientHashProvider,
   ) {}
 
   @Post('/login')
@@ -36,13 +36,13 @@ export class AuthenticationController {
     @Body('source') source: UserSourceType,
   ): Promise<AuthorizationEntity> {
     const ip = request.ip;
-    const clientHash = this.clientHashService.getClientHash(ip, userAgent);
+    const clientHash = this.clientHashProvider.getClientHash(ip, userAgent);
 
     let authorizationEntity: AuthorizationEntity | null = null;
 
     try {
       // TODO Add validator
-      authorizationEntity = await this.authenticationService.login(
+      authorizationEntity = await this.authenticationProvider.login(
         applicationId,
         email,
         password,
@@ -63,12 +63,12 @@ export class AuthenticationController {
     @Body('token') token: string,
   ): Promise<boolean> {
     const ip = request.ip;
-    const clientHash = this.clientHashService.getClientHash(ip, userAgent);
+    const clientHash = this.clientHashProvider.getClientHash(ip, userAgent);
 
     let isValidPermission: boolean | null = null;
 
     try {
-      isValidPermission = await this.authenticationService.checkPermission(
+      isValidPermission = await this.authenticationProvider.checkPermission(
         token,
         clientHash,
       );
@@ -83,7 +83,7 @@ export class AuthenticationController {
   @UseGuards(MasterGuard)
   public async truncateAuthorizations(): Promise<boolean> {
     try {
-      await this.authenticationService.truncateAuthorizations();
+      await this.authenticationProvider.truncateAuthorizations();
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }

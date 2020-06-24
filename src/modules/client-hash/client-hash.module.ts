@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { ClientHashService } from './client-hash.service';
+import { ClientHashProvider } from './client-hash.provider';
 
 @Module({
   imports: [],
-  exports: [ClientHashService],
+  exports: [ClientHashProvider],
   controllers: [],
-  providers: [ClientHashService],
+  providers: [ClientHashProvider],
 })
 export class ClientHashModule {}
