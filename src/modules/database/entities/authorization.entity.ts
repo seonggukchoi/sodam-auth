@@ -5,8 +5,8 @@ export class AuthorizationEntity {
   @PrimaryGeneratedColumn()
   public id: number;
 
-  @Column('int', { name: 'service_id' })
-  public serviceId: number;
+  @Column('int', { name: 'application_id' })
+  public applicationId: number;
 
   @Column('int', { name: 'user_id' })
   public userId: number;

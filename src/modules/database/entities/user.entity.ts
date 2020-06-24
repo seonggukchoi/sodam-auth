@@ -6,8 +6,8 @@ export class UserEntity {
   @PrimaryGeneratedColumn()
   public id: number;
 
-  @Column('int', { name: 'service_id' })
-  public serviceId: number;
+  @Column('int', { name: 'application_id' })
+  public applicationId: number;
 
   @Column('varchar', { length: 20 })
   public name: string;

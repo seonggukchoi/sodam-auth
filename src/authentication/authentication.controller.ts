@@ -30,7 +30,7 @@ export class AuthenticationController {
   public async login(
     @Req() request: Request,
     @Headers('user-agent') userAgent: string,
-    @Body('serviceId') serviceId: number,
+    @Body('applicationId') applicationId: number,
     @Body('email') email: string,
     @Body('password') password: string,
     @Body('source') source: UserSourceType,
@@ -43,7 +43,7 @@ export class AuthenticationController {
     try {
       // TODO Add validator
       authorizationEntity = await this.authenticationService.login(
-        serviceId,
+        applicationId,
         email,
         password,
         source,

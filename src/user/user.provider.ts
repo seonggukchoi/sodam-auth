@@ -62,12 +62,12 @@ export class UserProvider {
   public async insertUser(
     userInput: Pick<
       UserEntity,
-      'serviceId' | 'source' | 'email' | 'password' | 'name'
+      'applicationId' | 'source' | 'email' | 'password' | 'name'
     >,
   ): Promise<UserEntity> {
     const userEntity = this.usersRepository.create();
 
-    userEntity.serviceId = userInput.serviceId;
+    userEntity.applicationId = userInput.applicationId;
     userEntity.source = userInput.source;
     userEntity.email = userInput.email;
     userEntity.password = userInput.password;
@@ -107,14 +107,14 @@ export class UserProvider {
   }
 
   public async authenticateUser(
-    serviceId: number,
+    applicationId: number,
     email: string,
     password: string,
     source: UserSourceType,
   ): Promise<UserEntity> {
     const userEntity = await this.usersRepository.findOne({
       select: ['id', 'email', 'password', 'lastAuthenticatedAt'],
-      where: { serviceId, email, source },
+      where: { applicationId, email, source },
     });
 
     if (!userEntity) {

@@ -51,7 +51,7 @@ export class UserController {
     @Body()
     userInput: Pick<
       UserEntity,
-      'serviceId' | 'source' | 'email' | 'password' | 'name'
+      'applicationId' | 'source' | 'email' | 'password' | 'name'
     >,
   ): Promise<UserEntity> {
     let userEntity: UserEntity | null = null;

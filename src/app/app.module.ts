@@ -5,7 +5,7 @@ import { DatabaseModule } from '@/modules/database/database.module';
 import { HealthModule } from '@/health';
 import { AuthenticationModule } from '@/authentication';
 import { UserModule } from '@/user';
-import { ServiceModule } from '@/service';
+import { ApplicationModule } from '@/application';
 
 import { AppController } from './app.controller';
 
@@ -15,7 +15,7 @@ import { AppController } from './app.controller';
     HealthModule,
     AuthenticationModule,
     UserModule,
-    ServiceModule,
+    ApplicationModule,
   ],
   exports: [],
   controllers: [AppController],

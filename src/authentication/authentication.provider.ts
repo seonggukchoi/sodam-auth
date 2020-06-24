@@ -19,14 +19,14 @@ export class AuthenticationProvider {
   ) {}
 
   public async login(
-    serviceId: number,
+    applicationId: number,
     email: string,
     password: string,
     source: UserSourceType,
     clientHash: string,
   ): Promise<AuthorizationEntity> {
     const userEntity = await this.userService.authenticateUser(
-      serviceId,
+      applicationId,
       email,
       password,
       source,
@@ -37,11 +37,11 @@ export class AuthenticationProvider {
     }
 
     const userId = userEntity.id;
-    const token = this.signToken(serviceId, userId, email, clientHash);
+    const token = this.signToken(applicationId, userId, email, clientHash);
 
-    await this.expireAuthorizations(serviceId, userId, clientHash);
+    await this.expireAuthorizations(applicationId, userId, clientHash);
 
-    return this.insertAuthorization(serviceId, userId, token, clientHash);
+    return this.insertAuthorization(applicationId, userId, token, clientHash);
   }
 
   public async checkPermission(
@@ -61,10 +61,10 @@ export class AuthenticationProvider {
 
     const isSameExpiredAt =
       authorizationsExpiredAt.diff(tokenExpiredAt, 'second') < 3;
-    const isValidService =
-      tokenPayload.serviceId === authorizationEntity.serviceId;
+    const isValidApplication =
+      tokenPayload.applicationId === authorizationEntity.applicationId;
     const isValidUser = tokenPayload.userId === authorizationEntity.userId;
-    const isValidToken = isSameExpiredAt && isValidService && isValidUser;
+    const isValidToken = isSameExpiredAt && isValidApplication && isValidUser;
 
     if (!isValidToken) {
       throw new Error('Invalid token.');
@@ -92,7 +92,7 @@ export class AuthenticationProvider {
     }
 
     const authorizationEntity = await this.authorizationsRepository.findOne({
-      select: ['id', 'serviceId', 'userId', 'clientHash', 'expiredAt'],
+      select: ['id', 'applicationId', 'userId', 'clientHash', 'expiredAt'],
       where,
       order: { id: 'DESC' },
     });
@@ -105,13 +105,13 @@ export class AuthenticationProvider {
   }
 
   public async expireAuthorizations(
-    serviceId: number,
+    applicationId: number,
     userId: number,
     clientHash: string,
   ): Promise<boolean> {
     const authorizationEntities = await this.authorizationsRepository.find({
       select: ['id'],
-      where: { serviceId, userId, clientHash },
+      where: { applicationId, userId, clientHash },
       order: { id: 'DESC' },
     });
 
@@ -133,7 +133,7 @@ export class AuthenticationProvider {
   }
 
   public async insertAuthorization(
-    serviceId: number,
+    applicationId: number,
     userId: number,
     token: string,
     clientHash: string,
@@ -152,7 +152,7 @@ export class AuthenticationProvider {
 
     const userEntity = this.authorizationsRepository.create();
 
-    userEntity.serviceId = serviceId;
+    userEntity.applicationId = applicationId;
     userEntity.userId = userId;
     userEntity.token = token;
     userEntity.clientHash = clientHash;
@@ -168,7 +168,7 @@ export class AuthenticationProvider {
   }
 
   private signToken(
-    serviceId: number,
+    applicationId: number,
     userId: number,
     email: string,
     clientHash: string,
@@ -177,7 +177,7 @@ export class AuthenticationProvider {
     const expiresIn = this.getExpiresIn();
 
     const tokenPayload = <ITokenPayload>{
-      serviceId,
+      applicationId,
       userId,
       email,
       clientHash,
@@ -211,7 +211,7 @@ export class AuthenticationProvider {
 }
 
 interface ITokenPayload {
-  serviceId: number;
+  applicationId: number;
   userId: number;
   email: string;
   iat?: number;
