@@ -1,5 +1,3 @@
-import { ApplicationEntity } from './application.entity';
-import { AuthorizationEntity } from './authorization.entity';
-import { UserEntity } from './user.entity';
-
-export { ApplicationEntity, AuthorizationEntity, UserEntity };
+export { ApplicationEntity } from './application.entity';
+export { AuthorizationEntity } from './authorization.entity';
+export { UserEntity } from './user.entity';
