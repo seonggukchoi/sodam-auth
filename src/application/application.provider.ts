@@ -14,7 +14,7 @@ export class ApplicationProvider {
 
   public async fetchApplications(): Promise<ApplicationEntity[]> {
     const applicationEntities = await this.applicationRepository.find({
-      select: ['id', 'name', 'masterToken', 'createdAt', 'updatedAt'],
+      select: ['id', 'name', 'tokenTTL', 'createdAt', 'updatedAt'],
       where: { deletedAt: null },
       order: { id: 'ASC' },
     });
@@ -28,7 +28,7 @@ export class ApplicationProvider {
 
   public async fetchApplication(applicationId: number): Promise<ApplicationEntity> {
     const applicationEntity = await this.applicationRepository.findOne({
-      select: ['id', 'name', 'masterToken', 'createdAt', 'updatedAt'],
+      select: ['id', 'name', 'tokenTTL', 'createdAt', 'updatedAt'],
       where: { id: applicationId, deletedAt: null },
       order: { id: 'ASC' },
     });
@@ -41,22 +41,22 @@ export class ApplicationProvider {
   }
 
   public async insertApplication(
-    applicationInput: Pick<ApplicationEntity, 'name' | 'masterToken'>,
+    applicationInput: Pick<ApplicationEntity, 'name' | 'tokenTTL'>,
   ): Promise<ApplicationEntity> {
     const applicationEntity = this.applicationRepository.create();
 
     applicationEntity.name = applicationInput.name;
-    applicationEntity.masterToken = applicationInput.masterToken;
+    applicationEntity.tokenTTL = applicationInput.tokenTTL;
 
     return this.applicationRepository.save(applicationEntity);
   }
 
   public async updateApplication(
     applicationId: number,
-    applicationInput: Pick<ApplicationEntity, 'name' | 'masterToken'>,
+    applicationInput: Pick<ApplicationEntity, 'name' | 'tokenTTL'>,
   ): Promise<ApplicationEntity> {
     const applicationEntity = await this.applicationRepository.findOne({
-      select: ['id', 'name', 'masterToken'],
+      select: ['id', 'name', 'tokenTTL'],
       where: { id: applicationId, deletedAt: null },
       order: { id: 'ASC' },
     });
@@ -68,8 +68,8 @@ export class ApplicationProvider {
     if (isString(applicationInput.name)) {
       applicationEntity.name = applicationInput.name;
     }
-    if (isString(applicationInput.masterToken)) {
-      applicationEntity.masterToken = applicationInput.masterToken;
+    if (isString(applicationInput.tokenTTL)) {
+      applicationEntity.tokenTTL = applicationInput.tokenTTL;
     }
 
     return this.applicationRepository.save(applicationEntity);

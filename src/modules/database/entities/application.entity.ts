@@ -1,32 +1,44 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-@Entity('applications')
+@Entity({
+  name: 'applications',
+})
 export class ApplicationEntity {
   @PrimaryGeneratedColumn()
   public id: number;
 
-  @Column('varchar', { length: 50 })
+  @Column({
+    type: 'varchar',
+    length: 50,
+  })
   public name: string;
 
-  @Column('varchar', { name: 'master_token', length: 128 })
-  public masterToken: string;
+  @Column({
+    name: 'token_ttl',
+    type: 'varchar',
+    length: 10,
+  })
+  public tokenTTL: string;
 
-  @Column('timestamp', {
+  @Column({
     name: 'created_at',
+    type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP',
   })
   public createdAt: Date;
 
-  @Column('timestamp', {
+  @Column({
     name: 'updated_at',
+    type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP',
     onUpdate: 'CURRENT_TIMESTAMP',
   })
   public updatedAt: Date;
 
-  @Column('timestamp', { name: 'deleted_at', nullable: true })
+  @Column({
+    name: 'deleted_at',
+    type: 'timestamp',
+    nullable: true,
+  })
   public deletedAt?: Date | null;
-
-  @Column('varchar', { name: 'last_updated_by', length: 200, nullable: true })
-  public lastUpdatedBy?: string | null;
 }
