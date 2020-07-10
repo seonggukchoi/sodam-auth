@@ -25,12 +25,7 @@ export class AuthenticationProvider {
     source: UserSourceType,
     clientHash: string,
   ): Promise<AuthorizationEntity> {
-    const userEntity = await this.userProvider.authenticateUser(
-      applicationId,
-      email,
-      password,
-      source,
-    );
+    const userEntity = await this.userProvider.authenticateUser(applicationId, email, password, source);
 
     if (!userEntity) {
       throw new Error('Invalid user information.');
@@ -44,25 +39,17 @@ export class AuthenticationProvider {
     return this.insertAuthorization(applicationId, userId, token, clientHash);
   }
 
-  public async checkPermission(
-    token: string,
-    clientHash?: string,
-  ): Promise<boolean> {
+  public async checkPermission(token: string, clientHash?: string): Promise<boolean> {
     const tokenPayload = <ITokenPayload>jwt.decode(token);
-    const authorizationEntity = await this.fetchAuthorization(
-      token,
-      clientHash,
-    );
+    const authorizationEntity = await this.fetchAuthorization(token, clientHash);
 
     const authorizationsExpiredAt = moment(authorizationEntity.expiredAt)
       .startOf('second')
       .utc();
     const tokenExpiredAt = moment(tokenPayload.exp * 1000).utc();
 
-    const isSameExpiredAt =
-      authorizationsExpiredAt.diff(tokenExpiredAt, 'second') < 3;
-    const isValidApplication =
-      tokenPayload.applicationId === authorizationEntity.applicationId;
+    const isSameExpiredAt = authorizationsExpiredAt.diff(tokenExpiredAt, 'second') < 3;
+    const isValidApplication = tokenPayload.applicationId === authorizationEntity.applicationId;
     const isValidUser = tokenPayload.userId === authorizationEntity.userId;
     const isValidToken = isSameExpiredAt && isValidApplication && isValidUser;
 
@@ -81,10 +68,7 @@ export class AuthenticationProvider {
     return !!authorizationEntity;
   }
 
-  public async fetchAuthorization(
-    token: string,
-    clientHash?: string,
-  ): Promise<AuthorizationEntity> {
+  public async fetchAuthorization(token: string, clientHash?: string): Promise<AuthorizationEntity> {
     let where: ObjectLiteral = { token };
 
     if (clientHash) {
@@ -104,11 +88,7 @@ export class AuthenticationProvider {
     return authorizationEntity;
   }
 
-  public async expireAuthorizations(
-    applicationId: number,
-    userId: number,
-    clientHash: string,
-  ): Promise<boolean> {
+  public async expireAuthorizations(applicationId: number, userId: number, clientHash: string): Promise<boolean> {
     const authorizationEntities = await this.authorizationsRepository.find({
       select: ['id'],
       where: { applicationId, userId, clientHash },
@@ -119,9 +99,7 @@ export class AuthenticationProvider {
       throw new Error('Not found authorizations.');
     }
 
-    const authorizationIds = authorizationEntities.map(
-      authorizationEntity => authorizationEntity.id,
-    );
+    const authorizationIds = authorizationEntities.map(authorizationEntity => authorizationEntity.id);
 
     if (authorizationIds && authorizationIds.length > 0) {
       await this.authorizationsRepository.update(authorizationIds, {
@@ -139,12 +117,8 @@ export class AuthenticationProvider {
     clientHash: string,
   ): Promise<AuthorizationEntity> {
     const expiresInComponent = this.getExpiresInComponent();
-    const expiresInAmount = <moment.DurationInputArg1>(
-      expiresInComponent.expiresInAmount
-    );
-    const expiresInUnit = <moment.DurationInputArg2>(
-      expiresInComponent.expiresInUnit
-    );
+    const expiresInAmount = <moment.DurationInputArg1>expiresInComponent.expiresInAmount;
+    const expiresInUnit = <moment.DurationInputArg2>expiresInComponent.expiresInUnit;
     const expiredAt = moment()
       .utc()
       .add(expiresInAmount, expiresInUnit)
@@ -167,12 +141,7 @@ export class AuthenticationProvider {
     return true;
   }
 
-  private signToken(
-    applicationId: number,
-    userId: number,
-    email: string,
-    clientHash: string,
-  ): string {
+  private signToken(applicationId: number, userId: number, email: string, clientHash: string): string {
     const secretKey = config.get<string>('authentication.secret_key');
     const expiresIn = this.getExpiresIn();
 
@@ -188,23 +157,15 @@ export class AuthenticationProvider {
   }
 
   private getExpiresInComponent(): IExpiresInComponent {
-    const expiresInAmount = config.get<number>(
-      'authentication.sign_options.expires_in_amount',
-    );
-    const expiresInUnit = config.get<string>(
-      'authentication.sign_options.expires_in_unit',
-    );
+    const expiresInAmount = config.get<number>('authentication.sign_options.expires_in_amount');
+    const expiresInUnit = config.get<string>('authentication.sign_options.expires_in_unit');
 
     return { expiresInAmount, expiresInUnit };
   }
 
   private getExpiresIn(): string {
-    const expiresInAmount = config.get<number>(
-      'authentication.sign_options.expires_in_amount',
-    );
-    const expiresInUnit = config.get<string>(
-      'authentication.sign_options.expires_in_unit',
-    );
+    const expiresInAmount = config.get<number>('authentication.sign_options.expires_in_amount');
+    const expiresInUnit = config.get<string>('authentication.sign_options.expires_in_unit');
 
     return `${expiresInAmount} ${expiresInUnit}`;
   }

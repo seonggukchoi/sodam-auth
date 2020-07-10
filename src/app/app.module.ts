@@ -10,13 +10,7 @@ import { ApplicationModule } from '@/application';
 import { AppController } from './app.controller';
 
 @Module({
-  imports: [
-    DatabaseModule,
-    HealthModule,
-    AuthenticationModule,
-    UserModule,
-    ApplicationModule,
-  ],
+  imports: [DatabaseModule, HealthModule, AuthenticationModule, UserModule, ApplicationModule],
   exports: [],
   controllers: [AppController],
   providers: [],

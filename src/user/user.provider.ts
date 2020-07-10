@@ -15,16 +15,7 @@ export class UserProvider {
 
   public async fetchUsers(): Promise<UserEntity[]> {
     const userEntities = await this.usersRepository.find({
-      select: [
-        'id',
-        'email',
-        'name',
-        'source',
-        'lastAuthenticatedAt',
-        'createdAt',
-        'updatedAt',
-        'lastUpdatedBy',
-      ],
+      select: ['id', 'email', 'name', 'source', 'lastAuthenticatedAt', 'createdAt', 'updatedAt', 'lastUpdatedBy'],
       where: { deletedAt: null },
       order: { id: 'ASC' },
     });
@@ -38,16 +29,7 @@ export class UserProvider {
 
   public async fetchUser(userId: number): Promise<UserEntity> {
     const userEntity = await this.usersRepository.findOne({
-      select: [
-        'id',
-        'email',
-        'name',
-        'source',
-        'lastAuthenticatedAt',
-        'createdAt',
-        'updatedAt',
-        'lastUpdatedBy',
-      ],
+      select: ['id', 'email', 'name', 'source', 'lastAuthenticatedAt', 'createdAt', 'updatedAt', 'lastUpdatedBy'],
       where: { id: userId, deletedAt: null },
       order: { id: 'ASC' },
     });
@@ -60,10 +42,7 @@ export class UserProvider {
   }
 
   public async insertUser(
-    userInput: Pick<
-      UserEntity,
-      'applicationId' | 'source' | 'email' | 'password' | 'name'
-    >,
+    userInput: Pick<UserEntity, 'applicationId' | 'source' | 'email' | 'password' | 'name'>,
   ): Promise<UserEntity> {
     const userEntity = this.usersRepository.create();
 

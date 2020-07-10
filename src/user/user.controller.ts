@@ -1,15 +1,4 @@
-import {
-  Controller,
-  UseGuards,
-  HttpException,
-  HttpStatus,
-  Get,
-  Post,
-  Put,
-  Delete,
-  Body,
-  Param,
-} from '@nestjs/common';
+import { Controller, UseGuards, HttpException, HttpStatus, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
 
 import { MasterGuard } from '@/modules/guards';
 import { UserEntity } from '@/modules/database/entities';
@@ -49,10 +38,7 @@ export class UserController {
   @Post('/')
   public async insertUser(
     @Body()
-    userInput: Pick<
-      UserEntity,
-      'applicationId' | 'source' | 'email' | 'password' | 'name'
-    >,
+    userInput: Pick<UserEntity, 'applicationId' | 'source' | 'email' | 'password' | 'name'>,
   ): Promise<UserEntity> {
     let userEntity: UserEntity | null = null;
 
@@ -97,9 +83,7 @@ export class UserController {
   }
 
   @Delete('/:userId')
-  public async deleteUser(
-    @Param('userId') userId: number,
-  ): Promise<UserEntity> {
+  public async deleteUser(@Param('userId') userId: number): Promise<UserEntity> {
     let userEntity: UserEntity | null = null;
 
     try {

@@ -26,9 +26,7 @@ export class ApplicationProvider {
     return applicationEntities;
   }
 
-  public async fetchApplication(
-    applicationId: number,
-  ): Promise<ApplicationEntity> {
+  public async fetchApplication(applicationId: number): Promise<ApplicationEntity> {
     const applicationEntity = await this.applicationRepository.findOne({
       select: ['id', 'name', 'masterToken', 'createdAt', 'updatedAt'],
       where: { id: applicationId, deletedAt: null },
@@ -77,9 +75,7 @@ export class ApplicationProvider {
     return this.applicationRepository.save(applicationEntity);
   }
 
-  public async deleteApplication(
-    applicationId: number,
-  ): Promise<ApplicationEntity> {
+  public async deleteApplication(applicationId: number): Promise<ApplicationEntity> {
     const applicationEntity = await this.applicationRepository.findOne({
       select: ['id', 'updatedAt', 'deletedAt'],
       where: { id: applicationId, deletedAt: null },

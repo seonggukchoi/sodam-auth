@@ -1,11 +1,4 @@
-import {
-  Injectable,
-  Inject,
-  CanActivate,
-  ExecutionContext,
-  HttpException,
-  HttpStatus,
-} from '@nestjs/common';
+import { Injectable, Inject, CanActivate, ExecutionContext, HttpException, HttpStatus } from '@nestjs/common';
 import { AuthenticationProvider } from '../../authentication/authentication.provider';
 
 @Injectable()

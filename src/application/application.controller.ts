@@ -1,15 +1,4 @@
-import {
-  Controller,
-  HttpException,
-  HttpStatus,
-  UseGuards,
-  Get,
-  Post,
-  Put,
-  Delete,
-  Param,
-  Body,
-} from '@nestjs/common';
+import { Controller, HttpException, HttpStatus, UseGuards, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
 
 import { MasterGuard } from '@/modules/guards';
 import { ApplicationEntity } from '@/modules/database/entities';
@@ -35,15 +24,11 @@ export class ApplicationController {
   }
 
   @Get('/:applicationId')
-  public async getApplication(
-    @Param('applicationId') applicationId: number,
-  ): Promise<ApplicationEntity> {
+  public async getApplication(@Param('applicationId') applicationId: number): Promise<ApplicationEntity> {
     let applicationEntity: ApplicationEntity | null = null;
 
     try {
-      applicationEntity = await this.applicationProvider.fetchApplication(
-        applicationId,
-      );
+      applicationEntity = await this.applicationProvider.fetchApplication(applicationId);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -59,9 +44,7 @@ export class ApplicationController {
 
     try {
       // TODO Add validator
-      applicationEntity = await this.applicationProvider.insertApplication(
-        applicationInput,
-      );
+      applicationEntity = await this.applicationProvider.insertApplication(applicationInput);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -78,10 +61,7 @@ export class ApplicationController {
 
     try {
       // TODO Add validator
-      applicationEntity = await this.applicationProvider.updateApplication(
-        applicationId,
-        applicationInput,
-      );
+      applicationEntity = await this.applicationProvider.updateApplication(applicationId, applicationInput);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -90,15 +70,11 @@ export class ApplicationController {
   }
 
   @Delete('/:applicationId')
-  public async deleteApplication(
-    @Param('applicationId') applicationId: number,
-  ): Promise<ApplicationEntity> {
+  public async deleteApplication(@Param('applicationId') applicationId: number): Promise<ApplicationEntity> {
     let applicationEntity: ApplicationEntity | null = null;
 
     try {
-      applicationEntity = await this.applicationProvider.deleteApplication(
-        applicationId,
-      );
+      applicationEntity = await this.applicationProvider.deleteApplication(applicationId);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }

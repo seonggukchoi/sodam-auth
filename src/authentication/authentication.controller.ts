@@ -1,14 +1,4 @@
-import {
-  Controller,
-  HttpException,
-  HttpStatus,
-  Post,
-  Req,
-  Headers,
-  Body,
-  Delete,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, HttpException, HttpStatus, Post, Req, Headers, Body, Delete, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
 
 import { ClientHashProvider } from '@/modules/client-hash';
@@ -42,13 +32,7 @@ export class AuthenticationController {
 
     try {
       // TODO Add validator
-      authorizationEntity = await this.authenticationProvider.login(
-        applicationId,
-        email,
-        password,
-        source,
-        clientHash,
-      );
+      authorizationEntity = await this.authenticationProvider.login(applicationId, email, password, source, clientHash);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
@@ -68,10 +52,7 @@ export class AuthenticationController {
     let isValidPermission: boolean | null = null;
 
     try {
-      isValidPermission = await this.authenticationProvider.checkPermission(
-        token,
-        clientHash,
-      );
+      isValidPermission = await this.authenticationProvider.checkPermission(token, clientHash);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
